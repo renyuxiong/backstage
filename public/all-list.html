@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>预约</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <style>
+         ::-webkit-scrollbar {
+            /*滚动条整体样式*/
+            width: 4px;
+            /*高宽分别对应横竖滚动条的尺寸*/
+            height: 4px;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            /*滚动条里面小方块*/
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+         ::-webkit-scrollbar-track {
+            /*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            border-radius: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        #info-box {
+            display: flex;
+            height: 260px
+        }
+        
+        .left,
+        .center,
+        .right {
+            height: auto;
+            border-right: 1px solid #dedede;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+        .left {
+            padding-left: 20px;
+            width:325px;
+        }
+        
+        .center {
+            width: 350px;
+            padding-left: 20px;
+        }
+        
+        .right {
+            width: 350px;
+            padding-left: 20px;
+            border: none
+        }
+        
+        #queryByName {
+            width: 50%;
+            margin: 5px 0 0 5px
+        }
+        .currentInfo.active{
+            background-color: coral
+        }
+        .currentInfo {
+            padding: 1.2rem;
+        }
+        #info-box span{
+            font-size: 14px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-col-md3" style="height:100%;">
+        <div>
+            <input class="layui-input" type="text" placeholder="输入关键字按回车后查询" id="queryByName">
+            <div class="layui-tab layui-tab-card" style="height:100%;" lay-filter="demo">
+                <ul class="layui-tab-title">
+                    <li id="all-this" class="layui-this">全部预约</li>
+                    <li id="today-list">今日预约</li>
+                    <!-- <li style="background:#2F4056;color:#fff">新增预约<i class="layui-icon layui-icon-add-1"></i></li> -->
+                </ul>
+                <div class="layui-tab-content" style="height:750px;padding: 0">
+                    <div class="layui-tab-item layui-show" style="height: 100%;overflow: auto;" id="UserList"></div>
+                    <div class="layui-tab-item" style="height: 100%;overflow: auto;" id="Today"></div>
+                    <!-- <div class="layui-tab-item" style="height: 100%;overflow: auto;" id="myHuiFang"></div> -->
+                    <!-- <div class="layui-tab-item" style="height: 100%;overflow: auto;" id="allAppo"></div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md8" style="margin-top:3.3rem;margin-left:10px">
+        <div style="height:800px;overflow:auto;">
+            <div class="layui-row layui-col-space15	">
+                <div class="curInfoBox">
+                    <div class="layui-collapse" lay-filter="demo2">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">当前预约基本信息</h2>
+                            <div class="layui-colla-content layui-show">
+                                <div id="info-box">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">当前回访信息</h2>
+                            <!-- style="height: 100%;overflow: auto;" -->
+                            <div class="layui-colla-content layui-show">
+                                <div id="huifang-box">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="layui-colla-item">
+                                        <h2 class="layui-colla-title">待定</h2>
+                                        <div class="layui-colla-content layui-show">待定</div>
+                                </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script id="userInfoCard" type="text/html">
+        <%if(arr.length==0){%>
+            <div style="height:100%;width100%;background:#fff;position:relative">
+                <p style="display:block;position:absolute;top:50%;left:50%;transform: translate(-50%,-50%);font-size:30px;color:#375f89">
+                    空<br>空<br>如<br>也<br>~.~
+                </p>
+            </div>
+            <%}else{%>
+                <%for(i = 0; i < arr.length; i ++) {%>
+                    <div style="height:80px;background:#fff;color:black;border-bottom:1px solid #dedede;cursor:pointer" data-infoID="<%=arr[i].id%>" class="currentInfo">
+                        <div style="display:flex;flex-direction:row;justify-content: space-between;flex-direction:row;padding:5px 3px">
+                            <p style="font-size:14px;color:#646464">No.
+                                <%=arr[i].id%>
+                            </p>
+                            <p style="color:#646464">
+                                咨询时间:<%=arr[i].ad_time%>
+                            </p>
+                        </div>
+                        <div style="display:flex;flex-direction:row;justify-content: space-between;flex-direction:row;padding:0px 2px 5px">
+                            <p style="font-size:20px"><span style="font-size:20px">姓名：<span style="font-weight:bold"><%=arr[i].name%></span></p>
+                            <p>adminstor:
+                                <%=arr[i].adminstor%>
+                            </p>
+                        </div>
+                        <div style="display:flex;flex-direction:row;justify-content: space-between;flex-direction:row;padding:0px 2px 5px">
+                            <p>
+                                <span style="color:#ff6920">客户意向度:</span>
+                                 {{if arr[i].intentionality==0}}
+                                <img src="./images/xin.png" alt="" width="10" height="10"> 
+                                {{else if arr[i].intentionality==1}}
+                                <img src="./images/xin.png" alt="" width="10" height="10"> 
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+
+                                {{else if arr[i].intentionality==2}}
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10"> 
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+
+                                {{else if arr[i].intentionality==3}}
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10"> 
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+
+                                {{else if arr[i].intentionality==4}}
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                {{/if}}
+                            </p>
+                        </div>
+                    </div>
+                    <%}%>
+
+                        <%}%>
+    </script>
+    <!-- 预约信息-->
+    <!-- 患者信息-->
+    <script id="userInfoBox" type="text/html">
+        <div class="left">
+            <p><span style="font-size:18px">姓名</span>：<span class="nameSapn" style="font-size:16px;font-weight:bold"><%=arr.name%></span></p>
+            <p><span style="font-size:18px">性别</span>：{{if arr.sex==0}}<span class="sexSpan" style="font-size:16px">女</span>{{else if arr.sex==1}}<span style="font-size:20px" class="sexSpan">男</span></p>{{else}}{{/if}}
+            <p><span style="font-size:18px">年龄</span>：<span class="ageSpan" style="font-size:16px"><%=arr.age%></span></p>
+            <p><span style="font-size:18px">生日</span>：<span class="birthdaySpan" style="font-size:16px"><%=arr.birthday%></span></p>
+            <p><span style="font-size:18px">电话</span>：<span class="phoneSpan" style="font-size:16px;font-weight:bold"><%=arr.phone%></span></p>
+            <p><span style="font-size:18px">QQ</span>：<span class="qqSpan" style="font-size:16px"><%=arr.qq%></span></p>
+            <p><span style="font-size:18px">微信</span>：<span class="wechatSpan" style="font-size:16px"><%=arr.wechat%></span></p>
+            <p><span style="font-size:18px">邮箱</span>：<span class="emailSpan" style="font-size:16px"><%=arr.email%></span></p>
+
+        </div>
+        <div class="center">
+            <p><span style="font-size:18px">地址</span>：<span class="addressSpan" style="font-size:16px"><%=arr.address%></span></p>
+            <p><span style="font-size:18px">病种</span>：<span class="typeSpan" style="font-size:16px"><%=arr.type%></span></p>
+            <p><span style="font-size:18px">咨询时间</span>：<span class="adTimeSpan" style="font-size:16px"><%=arr.ad_time%></span></p>
+            <p><span style="font-size:18px">预约时间</span>：<span class="appTimeSpan" style="font-size:16px"><%=arr.app_time%></span></p>
+            <p><span style="font-size:18px">是否就诊</span>：
+                {{if arr.is_jiuzhen==0}}
+                <span class="isJiuZhenSpan" style="font-size:16px">未就诊</span>
+                {{else if arr.is_jiuzhen==1}}
+                    <span class="isJiuZhenSpan" style="font-size:16px">已就诊</span>
+                {{else}}{{/if}}
+
+            </p>
+            <p><span style="font-size:18px">渠道</span>：<span class="channelSpan" style="font-size:16px"><%=arr.channel%></span></p>
+            <p><span style="font-size:18px">消费金额</span>：<span class="priceSpan" style="font-size:16px"><%=arr.price%></span></p>
+        </div>
+        <div class="right">
+            <p><span style="font-size:18px">医院</span>：<span class="hospitalSpan" style="font-size:16px"><%=arr.hospital%></span></p>
+            <p><span style="font-size:18px">管理员</span>：<span class="adminstorSpan" style="font-size:16px"><%=arr.adminstor%></span></p>
+            <p><span style="font-size:18px">推广人员</span>：<span class="spreadSpan" style="font-size:16px"><%=arr.spread%></span></p>
+            <p><span style="font-size:18px">创建时间</span>：<span style="font-size:16px"><%=arr.create_time%></span></p>
+            <p><span style="font-size:18px">来源</span>：<span class="originSpan" style=" font-size:16px "><%=arr.origin%></span></p>
+    
+            <p><span style="font-size:18px ">客户意向度</span>：<span style="font-size:16px ">
+                {{if arr.intentionality==0}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                {{else if arr.intentionality==1}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+
+                {{else if arr.intentionality==2}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                {{else if arr.intentionality==3}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+
+                {{else if arr.intentionality==4}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                  {{else}}
+               {{/if}}
+            </span></p>
+            <p><span style="font-size:18px ">备注</span>：<span class="beizhuSpan " style="font-size:20px "><%=arr.beizhu%></span>
+         </div>
+    </script>
+    <!-- 回访信息 -->
+    <script id="userInfo_HF" type="text/html">
+        <table class="layui-table" lay-skin="line">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>状态</th>
+                    <th>回访人</th>
+                    <th>回访时间</th>
+                    <th>回访内容</th>
+                    <th>回访结果</th>
+        
+
+                </tr>
+            </thead>
+            <tbody>
+                <%for(i=0;i<arr.length;i++){%>
+                    <tr>
+                        <td>
+                            <%=arr[i].id%>
+                        </td>
+                        <td>
+                            <%if(arr[i].status==0){%>
+                                <p style="color:#FFB800">待跟进</p>
+                                <%}else{%>
+                                    <p style="color:#5FB878">已回访</p>
+                            <%}%>
+                        </td>
+                        <td>
+                            <%=arr[i].adminstor%>
+                        </td>
+                        <td>
+                            <%=arr[i].b_time%>
+                        </td>
+                        <td>
+                            <%=arr[i].content%>
+                        </td>
+                        <td>
+                            <%=arr[i].result%>
+                        </td>
+                    </tr>
+                    <%}%>
+            </tbody>
+        </table>
+    </script>
+
+    
+</body>
+<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="http://zizhu-1252438738.cos.ap-chengdu.myqcloud.com/assets/layer/layer.js"></script>
+
+<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="./js/xadmin.js"></script>
+<script src="./js/xcity.js"></script>
+<script src="./lib/template-web.js"></script>
+<script src="./js/until.js"></script>
+<script>
+    $(function() {
+        var layer = layui.layer;
+        var pageIndex = 1; // 第一页
+        var pageSize = "" //一页显示多少
+        if (window.location.search) {
+            var action = window.location.search.split('=')[1];
+            if (action == 'allList') {
+                $('#UserList').addClass('layui-show');
+                $('#Today').removeClass('layui-show');
+                $('#all-this').addClass('layui-this');
+                $('#today-list').removeClass('layui-this');
+                freshUserList();
+            }
+            if (action == 'todayList') {
+                $('#UserList').removeClass('layui-show');
+                $('#Today').addClass('layui-show');
+                $('#all-this').removeClass('layui-this');
+                $('#today-list').addClass('layui-this');
+                freshTodayList();
+            }
+        } else {
+            freshUserList() //默认显示所有信息
+        }
+        // 刷新列表
+        function freshUserList() {
+            var userList = ajax.send("/customer", "get", {
+                app_total:1,
+                page: pageIndex
+            })
+
+            if(userList){
+                console.log(`所有预约--------------------------`);
+                console.log(userList);
+                $('#UserList').html(template("userInfoCard", {
+                    arr: userList.data
+                }))
+            } else {
+                $("#queryByName").attr('disabled', 'disabled');
+            }
+        }
+
+        function freshTodayList() {
+            var userList = ajax.send("/customer", "get", {
+                today_total:1,
+                page: pageIndex
+            })
+
+            if(userList){
+                console.log(`所有预约--------------------------`);
+                console.log(userList);
+                $('#Today').html(template("userInfoCard", {
+                    arr: userList.data
+                }))
+            } else {
+                $("#queryByName").attr('disabled', 'disabled');
+            }
+        }
+    
+        // 显示预约的当前详细信息
+        function showUserInfo(id) {
+            var currentInfoRes = ajax.send("/customer/info", "get", {
+                id: id
+            })
+            console.log(`当前预约信息--------------------------`);
+            console.log(currentInfoRes);
+            if(currentInfoRes){
+                $('#info-box').html(template("userInfoBox", {arr: currentInfoRes.data}))
+            }
+        }
+        // 预约回访记录
+        function showUserInfo_HF(id) {
+            var currentUser_HF = ajax.send("/backvisit", "get", {customer_id: id})
+            console.log(`当前预约回访记录--------------------------`);
+            console.log(currentUser_HF);
+            if(currentUser_HF){
+                $('#huifang-box').html(template("userInfo_HF", {arr: currentUser_HF.data}))
+            }
+        }
+        //默认显示第一个预约 
+        var firstID = $("#UserList div").eq(0).data("infoid");
+        showUserInfo(firstID)
+        showUserInfo_HF(firstID)
+        // 点击显示
+        $("#UserList").on("click", ".currentInfo", function(event) {
+            // $(event.currentTarget).css({backgroundColor:"#2c9afa"}).find("p").css("color","#fff").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            $(event.currentTarget).css({backgroundColor:"rgb(242, 242, 242)"}).find("p").css("color","black").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            var currentId = $(event.currentTarget).data("infoid")
+            showUserInfo(currentId)
+            showUserInfo_HF(currentId)
+        })
+        
+        $("#Today").on("click", ".currentInfo", function(event) {
+            // $(event.currentTarget).css({backgroundColor:"#2c9afa"}).find("p").css("color","#fff").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            $(event.currentTarget).css({backgroundColor:"rgb(242, 242, 242)"}).find("p").css("color","black").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            var currentId = $(event.currentTarget).data("infoid")
+            showUserInfo(currentId)
+            showUserInfo_HF(currentId)
+        })
+        // 搜索
+        $("#queryByName").on("keydown", function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                var key_word = $(this).val()
+                var userList = ajax.send("/customer", "get", {
+                    key_word: key_word,
+                    app_total:1
+                })
+                console.log(userList);
+                if(userList){
+                    $('#UserList').html(template("userInfoCard", {
+                        arr: userList.data
+                    }))
+                    showUserInfo(userList.data[0].id)  //显示当前添加的预约信息
+                    showUserInfo_HF(userList.data[0].id) //显示当前添加的预约回访信息
+                }
+            }
+        })
+        
+        layui.use(['element', 'layer', 'util', 'form', 'layedit', 'laydate', "code"], function() {
+                var util = layui.util;
+                var element = layui.element;
+                layer = layui.layer;
+                var form = layui.form;
+                var layedit = layui.layedit
+                var laydate = layui.laydate;
+                element.on('collapse(demo2)', function(data) {
+                    //data.show得到当前面板的展开状态，true或者false   data.title得到当前点击面板的标题区域DOM对象   data.content得到当前点击面板的内容区域DOM对象
+                    var collapseFlag = data.show
+                });
+                element.on('tab(demo)', function(data) {
+                    
+                    //this 当前Tab标题所在的原始DOM元素 data.index 得到当前Tab的所在下标n data.elem得到当前的Tab大容器
+                    if (data.index == 0) {
+                        //模板渲染完成之后回调函数执行  
+                        // $(".layui-collapse .layui-colla-content").eq(data.index).addClass("layui-show")
+                        // alert("hello world")
+                        freshUserList()
+                        $("#queryByName").val("");
+
+                    }
+
+                    if (data.index == 1) {
+                        freshTodayList()
+                        $("#queryByName").val("");
+                    }
+               
+                });
+               
+            })
+    })
+</script>
+
+</html>

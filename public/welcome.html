@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"
+    />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+</head>
+
+<body>
+    <div class="x-body layui-anim layui-anim-up">
+        <blockquote class="layui-elem-quote">欢迎管理员：
+            <span class="x-red">暂未登录</span></blockquote>
+        <!-- <p>！当前时间:2018-04-25 20:50:53</p> -->
+        <fieldset class="layui-elem-field">
+            <legend>数据统计</legend>
+            <div class="layui-field-box">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 90px;">
+                                <div carousel-item="">
+                                    <ul class="layui-row layui-col-space10 layui-this">
+                                        <li class="layui-col-xs2">
+                                            <a _href="./all-list.html" onclick="openTab2(this, 'allList')" class="x-admin-backlog-body">
+                                                <h3>总预约</h3>
+                                                <p>
+                                                    <cite id="count">66</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs2">
+                                            <a _href="./all-list.html" onclick="openTab2(this, 'todayList')" class="x-admin-backlog-body">
+                                                <h3>今日总预约</h3>
+                                                <p>
+                                                    <cite id="today-count">67</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs2">
+                                            <a _href="./user-list.html" onclick="openTab(this, 'myAppo')" class="x-admin-backlog-body">
+                                                <h3>我的总预约</h3>
+                                                <p>
+                                                    <cite id="my-app">12</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs2">
+                                            <a _href="./user-list.html"  onclick="openTab(this, 'myToday')" class="x-admin-backlog-body">
+                                                <h3>我的今日预约</h3>
+                                                <p>
+                                                    <cite id="my-today-count">67</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs2">
+                                            <a _href="./user-list.html" onclick="openTab(this, 'myHuiFang')" class="x-admin-backlog-body">
+                                                <h3>我的今日待回访</h3>
+                                                <p>
+                                                    <cite id="wait-back">99</cite></p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <!-- <fieldset class="layui-elem-field">
+            <legend>系统通知</legend>
+            <div class="layui-field-box">
+                <table class="layui-table" lay-skin="line">
+                    <tbody>
+                        <tr>
+                            <td >
+                                <a class="x-a" href="/" target="_blank">新版x-admin 2.0上线了</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                <a class="x-a" href="/" target="_blank">交流qq群:(519492808)</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset> -->
+        <!--<fieldset class="layui-elem-field">-->
+        <!--<legend>系统信息</legend>-->
+        <!--<div class="layui-field-box">-->
+        <!--<table class="layui-table">-->
+        <!--<tbody>-->
+        <!--<tr>-->
+        <!--<th>xxx版本</th>-->
+        <!--<td>1.0.180420</td></tr>-->
+        <!--<tr>-->
+        <!--<th>服务器地址</th>-->
+        <!--<td>x.xuebingsi.com</td></tr>-->
+        <!--<tr>-->
+        <!--<th>操作系统</th>-->
+        <!--<td>WINNT</td></tr>-->
+        <!--<tr>-->
+        <!--<th>运行环境</th>-->
+        <!--<td>Apache/2.4.23 (Win32) OpenSSL/1.0.2j mod_fcgid/2.3.9</td></tr>-->
+        <!--<tr>-->
+        <!--<th>PHP版本</th>-->
+        <!--<td>5.6.27</td></tr>-->
+        <!--<tr>-->
+        <!--<th>PHP运行方式</th>-->
+        <!--<td>cgi-fcgi</td></tr>-->
+        <!--<tr>-->
+        <!--<th>MYSQL版本</th>-->
+        <!--<td>5.5.53</td></tr>-->
+        <!--<tr>-->
+        <!--<th>ThinkPHP</th>-->
+        <!--<td>5.0.18</td></tr>-->
+        <!--<tr>-->
+        <!--<th>上传附件限制</th>-->
+        <!--<td>2M</td></tr>-->
+        <!--<tr>-->
+        <!--<th>执行时间限制</th>-->
+        <!--<td>30s</td></tr>-->
+        <!--<tr>-->
+        <!--<th>剩余空间</th>-->
+        <!--<td>86015.2M</td></tr>-->
+        <!--</tbody>-->
+        <!--</table>-->
+        <!--</div>-->
+        <!--</fieldset>-->
+        <fieldset class="layui-elem-field">
+            <legend>预约系统操作日志</legend>
+            <div class="layui-field-box">
+                <table class="layui-table">
+                    <tbody>
+                        <tr>
+                            <!-- <th>版权所有</th>
+                            <td>xxxxx(xxxx)
+                                <a href="http://www.xxx.com/" class='x-a' target="_blank">访问官网</a></td> -->
+                        </tr>
+                        <tr>
+                            <!-- <th>开发者</th> 
+                            <td>马志斌(113664000@qq.com)</td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="layui-elem-field">
+            <legend>开发团队</legend>
+            <div class="layui-field-box">
+                <table class="layui-table">
+                    <tbody>
+                        <tr>
+                            <th>版权所有</th>
+                            <td>上海天医数据科技有限公司
+                                <a href="http://www.tianyi120.com/" class='x-a' target="_blank">访问官网</a></td>
+                        </tr>
+                        <tr>
+                            <th>开发者</th>
+                            <!-- <td>由丑陋的任宇雄与肥胖的陈航再加上帅气的陆天雄共同开发</td></tr> -->
+                            <td>任宇雄/陈航/陆天雄</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <blockquote class="layui-elem-quote layui-quote-nm"></blockquote>
+    </div>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script src="./js/until.js"></script>
+    <script>
+        (function () {
+            document.getElementsByClassName('x-red')[0].innerHTML = localStorage.getItem('name');
+            var res = ajax.send('/', 'get');
+            if (res) {
+                $('#count').html(res.data.app_total);
+                $('#my-app').html(res.data.self_app_total);
+                $('#today-count').html(res.data.today_total);
+                $('#my-today-count').html(res.data.self_today_total);
+                $('#wait-back').html(res.data.today_wait_backvist);
+            }
+        })();
+
+        function showT(n) {
+            if (n === 0) {
+                var res = ajax.send('/customer', 'get', {
+                    app_total: 1
+                });
+
+                if (res) {
+                    //
+                }
+            } else if (n === 1) {
+                var res = ajax.send('/customer', 'get', {
+                    today_total: 1
+                });
+
+                if (res) {
+                    //
+                }
+            }
+        }
+
+        function openTab(that, action) {
+            layui.use(['element'], function () {  //如果只加载一个模块，可以不填数组。如：layui.use('form')
+                element = layui.element//获取form模块
+                var url = $(that).attr('_href')+ '?action=' +action;
+                var index = Math.ceil(Math.random()*50);
+                  //触发事件
+                tab = {
+                        tabAdd: function(title,url,id){
+                            console.log(url);
+                        //新增一个Tab项
+                        parent.element.tabAdd('xbs_tab', {
+                            title: title 
+                            ,content: '<iframe tab-id="'+id+'" frameborder="0" src="'+url+'" scrolling="yes" class="x-iframe diy-page"></iframe>'
+                            ,id: id
+                        })
+                        }
+                        ,tabDelete: function(othis){
+                        //删除指定Tab项
+                        element.tabDelete('xbs_tab', '44'); //删除：“商品管理”
+                        
+                        
+                        othis.addClass('layui-btn-disabled');
+                        }
+                        ,tabChange: function(id){
+                        //切换到指定Tab项
+                        parent.element.tabChange('xbs_tab', id); //切换到：用户管理
+                        }
+                };
+                
+                if ($(window.parent.document).find(".diy-page").length) {
+                    console.log('存在');
+                    tab.tabChange($(window.parent.document).find(".diy-page").attr('tab-id'));
+                } else {
+                    tab.tabAdd('我的预约',url,index+1);
+                    tab.tabChange(index+1);
+                }
+               
+                
+            });
+        }
+
+        function openTab2(that, action) {
+            layui.use(['element'], function () {  //如果只加载一个模块，可以不填数组。如：layui.use('form')
+                element = layui.element//获取form模块
+                var url = $(that).attr('_href')+ '?action=' +action;
+                var index = Math.ceil(Math.random()*50);
+                  //触发事件
+                tab = {
+                        tabAdd: function(title,url,id){
+                            console.log(url);
+                        //新增一个Tab项
+                        parent.element.tabAdd('xbs_tab', {
+                            title: title 
+                            ,content: '<iframe tab-id="'+id+'" frameborder="0" src="'+url+'" scrolling="yes" class="x-iframe diy-page2"></iframe>'
+                            ,id: id
+                        })
+                        }
+                        ,tabDelete: function(othis){
+                        //删除指定Tab项
+                        element.tabDelete('xbs_tab', '44'); //删除：“商品管理”
+                        
+                        
+                        othis.addClass('layui-btn-disabled');
+                        }
+                        ,tabChange: function(id){
+                        //切换到指定Tab项
+                        parent.element.tabChange('xbs_tab', id); //切换到：用户管理
+                        }
+                };
+                
+                if ($(window.parent.document).find(".diy-page2").length) {
+                    console.log('存在');
+                    tab.tabChange($(window.parent.document).find(".diy-page2").attr('tab-id'));
+                } else {
+                    tab.tabAdd('系统全部预约',url,index+1);
+                    tab.tabChange(index+1);
+                }
+               
+                
+            });
+        }
+    </script>
+</body>
+
+</html>

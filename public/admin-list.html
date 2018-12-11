@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>管理员列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <style>
+
+        /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+        ::-webkit-scrollbar {
+            width: 16px;
+            height: 16px;
+            background-color: #F5F5F5;
+        }
+
+        /*定义滚动条轨道 内阴影+圆角*/
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            background-color: #F5F5F5;
+        }
+
+        /*定义滑块 内阴影+圆角*/
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+            background-color: #555;
+        }
+
+
+    </style>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+          <a> <cite>首页</cite></a>
+
+        <a> <cite>管理员列表</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="x-body" style="padding: 0">
+    <div class="layui-card">
+        <!-- <div class="layui-card-header" style="">管理员列表</div> -->
+        <div class="layui-card-body">
+            <table id="AdminTable" lay-filter="AdminTable"></table>
+            <script type="text/html" id="AdminTable_Role">
+                {{# if(d.role==0) { }}
+                <span>管理员</span>
+                {{# } else if(d.role==1){ }}
+                <span>电商</span>
+                {{# } else if(d.role==2){ }}
+                <span>咨询</span>
+                {{# } }}
+            </script>
+            <script type="text/html" id="AdminTable_Setting">
+                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-xs" lay-event="editAdmin"><i
+                        class="layui-icon">&#xe642;</i>修改
+                </button>
+                <button class="layui-btn layui-btn-radius layui-btn-danger layui-btn-xs" lay-event="deleteAdmin"><i
+                        class="layui-icon">&#xe640;</i>删除
+                </button>
+            </script>
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="addAdmin">添加管理员<i
+                            class="layui-icon layui-icon-add-1"></i></button>
+                    <!-- <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button> -->
+                </div>
+            </script>
+        </div>
+    </div>
+</div>
+
+<!-- 角色弹出 -->
+<div id="editRoleAlert" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <!--<label class="layui-form-label">修改权限</label>-->
+            <div class="layui-input-block" id="roleRadio">
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn editRole" lay-filter="editRole" type="button" style="background: #4476a7">修改
+                </button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 添加管理员 -->
+<div class="layui-card-body" id="addAdminAlert" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" autocomplete="off" placeholder="请输入管理员姓名" class="layui-input adminName"
+                       lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" autocomplete="off" placeholder="请设置管理员密码"
+                       class="layui-input adminPassword" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择角色</label>
+            <div id="newRole" class="layui-input-block">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn addXadmin" lay-filter="addXadmin" type="button">立即添加</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+</body>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="./js/xadmin.js"></script>
+<script type="text/javascript" src="./js/until.js"></script>
+<script>
+
+    $(function () {
+
+        layui.use(['element', 'form', 'layedit', 'laydate', "table", "laytpl", "layer"], function () {
+
+            var element = layui.element
+                , form = layui.form
+                , layedit = layui.layedit
+                , laydate = layui.laydate
+                , table = layui.table
+                , laytpl = layui.laytpl
+                , layer = layui.layer;
+
+            var b = layer.msg('正在加载权限功能列表', {
+                icon: 16
+                ,shade: 0.01
+                ,time:0
+            });
+            var res = ajax.send('/action', 'get');
+            if (res) {
+                layer.close(b);
+                var roles = res.data;
+                var h = '';
+
+                for (var i in roles) {
+                    $('#roleRadio').append('<input id="role'+roles[i].id+'" type="checkbox" name="like[]" value="'+ roles[i].id +'" title="'+ roles[i].name +'">');
+                    $('#newRole').append('<input type="checkbox" name="action[]" value="'+ roles[i].id +'" title="'+ roles[i].name +'">');
+                }
+
+            }
+
+            //管理员列表
+            var AdminTable = table.render({
+                elem: '#AdminTable',
+                skin: "line",
+                height: "700",
+                url: "http://backstage.iyaa180.com:9501/admin",
+                headers: {
+                    'app-auth': 'ADGN ' + localStorage.getItem('token')
+                },
+                text:{
+                    none:"404"
+                },
+                toolbar: '#toolbarDemo',
+                cols: [
+                    [
+                        {
+                            title: 'ID',
+                            field: 'id',
+                            align: 'center',
+                        },
+                        {
+                            title: '姓名',
+                            field: 'name',
+                            align: 'center',
+                        },
+                        // {
+                        //     title: '密码',
+                        //     field: 'password',
+                        //     align: 'center',
+                        // },
+                        // {
+                        //     title: '角色',
+                        //     templet: '#AdminTable_Role',
+                        //     align: 'center',
+                        // },
+                        {
+                        title: '操作',
+                        templet: '#AdminTable_Setting',
+                        align: 'center',
+                    }
+                    ]
+                ],
+                response: {
+                    statusName: 'status_code',
+                    statusCode: 200,
+                    msg: "message"
+                }
+            });
+            //  修改角色   删除管理员
+            table.on('tool(AdminTable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var iiiid = data.id;
+                var layEvent = obj.event;
+                var tr = obj.tr;
+                switch (layEvent) {
+                    case 'deleteAdmin':
+                        console.log(data);
+                        //询问框
+                        layer.confirm('确定删除' + data.name, {
+                            btn: ['确定', '取消'],
+                            title: "提示"
+                        }, function () {
+                            var res = ajax.send('/admin/delete', 'delete', data.id);
+                            if (res) {
+                                layer.msg(res.message, function () {
+                                    AdminTable.reload({})
+                                })
+                            }
+                        }, function () {
+                            // layer.msg('也可以这样', {
+                            //   time: 20000, //20s后自动关闭
+                            //   btn: ['明白了', '知道了']
+                            // });
+                        });
+                        break;
+                    case 'editAdmin':
+                        var res = ajax.send('/action/roleRoute', 'get', {admin_id:data.id});
+                        if (res) {
+                            var data = res.data;
+                            if (data.length > 0) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if (data[i].is_selected) {
+                                        console.log($("#role"+data[i].id));
+                                        $("#role"+data[i].id).prop('checked', true);
+                                    } else {
+                                        $("#role"+data[i].id).prop('checked', false);
+                                    }
+                                }
+                            }
+                        } else {
+                            return false;
+                        }
+                        var a = data.role;
+                        var editRoleWin = layer.open({
+                            type: 1,
+                            title: "修改权限",
+                            skin: "layui-layer-lan",
+                            area: "60%",
+                            content: $("#editRoleAlert"),
+                            success: function (layero, index) {
+                                form.render();
+                            },
+                            cancel: function (index, layero) {
+                                layer.close(index)
+                            }
+
+                        });
+                        // 修改管理员
+                        $(".editRole").unbind("click").click(function () {
+                            var roleArray = [];
+
+                            var input = document.getElementsByName('like[]');
+
+                            for (var i = 0; i < input.length; i++) {
+                                if (input[i].checked) {
+                                    roleArray.push(input[i].value)
+                                }
+                            }
+
+                            var res = ajax.send('/role/update', 'patch', {admin_id:iiiid, actions:roleArray});
+                            if (res) {
+                                layer.msg(res.message, function () {
+                                    layer.close(editRoleWin);
+                                    // AdminTable.reload({})
+                                })
+                            }
+                            return false;
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            //表头添加
+            table.on('toolbar(AdminTable)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'addAdmin':
+                        var addWin = layer.open({
+                            type: 1,
+                            title: "添加管理员",
+                            skin: "layui-layer-lan",
+                            area: "60%",
+                            content: $("#addAdminAlert"),
+                            success:function () {
+                                form.render();
+                            }
+                        });
+                        // 添加管理员
+                        $(".addXadmin").unbind("clcik").click(function (data) {
+                            var username = $(".adminName").val().trim();
+                            var password = $(".adminPassword").val().trim();
+                            var roleArray = [];
+                            var input = document.getElementsByName('action[]');
+
+                            for (var i = 0; i < input.length; i++) {
+                                if (input[i].checked) {
+                                    roleArray.push(input[i].value)
+                                }
+                            }
+
+                            // roleRadio
+
+                            var res = ajax.send('/admin/store', 'post', {name: username, password: password, role: roleArray});
+                            console.log(res);
+                            if (res) {
+                                layer.msg(res.message, {time: 1500}, function () {
+                                    $(".adminName").val("");
+                                    $(".adminPassword").val("");
+                                    layer.close(addWin);
+                                    AdminTable.reload({});
+                                })
+                            }
+                            return false;
+                        });
+
+                        break;
+                    default:
+                        break;
+                }
+                ;
+            });
+
+        })
+
+    })
+</script>
+
+</html>

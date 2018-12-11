@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>预约</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <style>
+         ::-webkit-scrollbar {
+            /*滚动条整体样式*/
+            width: 4px;
+            /*高宽分别对应横竖滚动条的尺寸*/
+            height: 4px;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            /*滚动条里面小方块*/
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+         ::-webkit-scrollbar-track {
+            /*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            border-radius: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        #info-box {
+            display: flex;
+            height: 260px
+        }
+        
+        .left,
+        .center,
+        .right {
+            height: auto;
+            border-right: 1px solid #dedede;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+        .left {
+            padding-left: 20px;
+            width:325px;
+        }
+        
+        .center {
+            width: 350px;
+            padding-left: 20px;
+        }
+        
+        .right {
+            width: 350px;
+            padding-left: 20px;
+            border: none
+        }
+         /* 关键字搜索 */
+         #queryByName {
+            width: 50%;
+            margin: 5px 0 0 5px
+        }
+        /* 时间筛选 */
+        .queryByDate_input{
+            width: 50%;
+            margin: 5px 0 0 5px
+        }
+
+        .currentInfo.active{
+            background-color: coral
+        }
+        .currentInfo {
+            padding: 1.2rem;
+        }
+        #info-box span{
+            font-size: 14px !important;
+        }
+    </style>
+</head>
+<body style="overflow:hidden">
+    <div class="layui-col-md3" style="height:100%;">
+        <div>
+            <input class="layui-input" type="text" placeholder="输入关键字按回车后查询" id="queryByName">
+            <input type="text" class="layui-input queryByDate_input" placeholder="选择时间段查询预约" style="display: inline;"><button class="layui-btn queryByDate">查询</button>
+
+            <div class="layui-tab layui-tab-card" style="height:100%;" lay-filter="demo">
+                <ul class="layui-tab-title" style="margin-bottom: 1rem;">
+                    <li id="allAppoTab">全部预约</li>
+                    <li id="todayAppoTab">今日预约</li>
+                    <li id="todayWaitHuiFangTab">今日待回访</li>
+                    <!-- <li>系统全部预约</li> -->
+                    <li style="background:#2F4056;color:#fff">新增预约<i class="layui-icon layui-icon-add-1"></i></li>
+                </ul>
+                <div class="layui-tab-content" style="height:750px;padding: 0">
+                    <div class="layui-tab-item layui-show" style="height: 100%;overflow: auto;" id="UserList"></div>
+                    <div class="layui-tab-item" style="height: 100%;overflow: auto;" id="myToday"></div>
+                    <div class="layui-tab-item" style="height: 100%;overflow: auto;" id="myHuiFang"></div>
+                    <!-- <div class="layui-tab-item" style="height: 100%;overflow: auto;" id="allAppo"></div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md8" style="margin-top: 3.3rem;margin-left:10px">
+        <div style="height:800px;overflow:auto;">
+            <div class="layui-row layui-col-space15	">
+                <div class="curInfoBox">
+                    <div class="layui-collapse" lay-filter="demo2">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">当前预约基本信息</h2>
+                            <div class="layui-colla-content layui-show">
+                                <div id="info-box">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">当前回访信息</h2>
+                            <!-- style="height: 100%;overflow: auto;" -->
+                            <div class="layui-colla-content layui-show">
+                                <div id="huifang-box">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="layui-colla-item">
+                                        <h2 class="layui-colla-title">待定</h2>
+                                        <div class="layui-colla-content layui-show">待定</div>
+                                </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 添加回访 -->
+    <div id="addHuiFangAlert" style="display:none">
+        <div class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">回访内容</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="content" id="content" autocomplete="off" placeholder="请输入回访内容(必填)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">回访时间</label>
+                    <div class="layui-input-inline">
+                        <!-- <input type="text" name="b_time" id="b_time" placeholder="选择回访时间(必填)" autocomplete="off" class="layui-input"> -->
+                        <input type="text" class="layui-input" placeholder="选择回访时间(必填)" name="b_time" id="b_time">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">回访状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="status" value="0" title="待跟进" checked="">
+                    <input type="radio" name="status" value="1" title="已回访">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">回访结果</label>
+                <div class="layui-input-inline">
+                    <textarea placeholder="请输入回访结果" id="result" class="layui-textarea" cols="80"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn addHF_btn" lay-submit="" lay-submit="" lay-filter="addHF_btn">添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 修改回访 -->
+    <div id="updateHuiFangAlert" style="display:none">
+        <div class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">回访内容</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="content" id="content_up" autocomplete="off" placeholder="请输入回访内容(必填)" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">回访状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="status_up" value="0" title="待跟进" checked="">
+                    <input type="radio" name="status_up" value="1" title="已回访">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">回访结果</label>
+                <div class="layui-input-inline">
+                    <textarea placeholder="请输入回访结果" id="result_up" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn updateHF_btn" lay-submit="" lay-submit="" lay-filter="updateHF_btn">添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--转让选择 -->
+    <div class="transfer" style="display:none;padding: 1.2rem;text-align: center">
+        <div class="layui-input-block" style="margin-left:0px !important">
+            <select name="admin-list" lay-verify="required">
+            <option value=""></option>
+          </select>
+        </div>
+        <button style="margin-top:1rem" class="yes-admin layui-btn layui-btn-lan">确定</button>
+
+    </div>
+    <div id="add_app" style="display:none">
+        <div class="layui-form" action="" style="margin-top:10px">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="（必填）" class="layui-input">
+                    </div>
+
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">年龄</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="age" autocomplete="off" class="layui-input" placeholder="请输入预约年龄">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" pane="">
+                <div class="layui-inline">
+
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sex" value="1" title="男" checked="">
+                        <input type="radio" name="sex" value="0" title="女">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">生日</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="birthday" id="birthday" placeholder="选择时间" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" id="x-city">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-inline">
+                    <select name="province" lay-filter="province" class="province">
+                            <option value="">请选择省</option>
+                            </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="city" lay-filter="city" class="city">
+                            <option value="">请选择市</option>
+                            </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="area" lay-filter="area" class="area">
+                            <option value="">请选择县/区</option>
+                            </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="email" autocomplete="off" class="layui-input" placeholder="请输入预约邮箱">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">手机</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" name="phone" autocomplete="off" class="layui-input" placeholder="请输入手机号">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">QQ</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="qq" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">微信</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="wechat" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">预约日期</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="app_time" id="app_time" placeholder="选择时间" autocomplete="off" class="layui-input">
+
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">病种</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="type" autocomplete="off" class="layui-input" placeholder="请输入病种类型">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" pane="">
+                <div class="layui-inline">
+                    <label class="layui-form-label">是否就诊</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="is_jiuzhen" value="0" title="未就诊" checked="">
+                        <input type="radio" name="is_jiuzhen" value="1" title="就诊">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">消费金额</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="price" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">渠道</label>
+                <div class="layui-input-inline">
+                    <select name="channel" lay-filter="channelPeople" lay-verify="required" class="channel">
+                                <option value="">请选择(必选)</option>
+                                <option value="百度推广(竞价)">百度推广(竞价)</option>
+                                <option value="微博粉丝通">微博粉丝通</option>
+                                <option value="美团大众">美团大众</option>
+                                <option value="新氧">新氧</option>
+                                <option value="更美">更美</option>
+                                <option value="优化站">优化站</option>
+                                <option value="免费微博">免费微博</option>
+                                <option value="其他">其他</option>
+                            </select>
+                </div>
+
+                <label class="layui-form-label">推广人员</label>
+                <div class="layui-input-inline">
+                    <select name="spread" lay-filter="tuiGuanPeople" lay-verify="required" class="spread">
+                            <option value="">请选择(必选)</option>
+                            <option value="新媒体运营-刘用">新媒体运营-刘用</option>
+                            <option value="SEO优化-卢博雅">SEO优化-卢博雅</option>
+                            <option value="SEM竞价-张洪丽">SEM竞价-张洪丽</option>
+                            <option value="微博运营-李平">微博运营-李平</option>
+                            <option value="暂无">暂无</option>
+                        </select>
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">咨询时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="ad_time" id="ad_time" placeholder="请选择(必选)" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">医院</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="hospital" lay-verify="" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item"></div>
+            <div class="layui-form-item" pane="">
+                <label class="layui-form-label">用户意向度</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="intentionality" value="0" title="一星">
+                    <input type="radio" name="intentionality" value="1" title="二星">
+                    <input type="radio" name="intentionality" value="2" title="三星">
+                    <input type="radio" name="intentionality" value="3" title="四星">
+                    <input type="radio" name="intentionality" value="4" title="五星" checked="">
+                </div>
+            </div>
+            <!-- <div class="layui-inline">
+                        <label class="layui-form-label">设置提醒</label>
+                        <div class="layui-input-inline">
+                          <input type="text" class="layui-input" id="tixin-time" placeholder="yyyy-MM-dd HH:mm:ss">
+                        </div>
+                </div> -->
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline" style="width:500px">
+                    <textarea placeholder="备注" id="beizhu" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="addUser" id="addUser">添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script id="userInfoCard" type="text/html">
+        <%if(arr.length==0){%>
+            <div style="height:100%;width100%;background:#fff;position:relative">
+                <p style="display:block;position:absolute;top:50%;left:50%;transform: translate(-50%,-50%);font-size:30px;color:#375f89">
+                    空<br>空<br>如<br>也<br>~.~
+                </p>
+            </div>
+            <%}else{%>
+                <%for(i = 0; i < arr.length; i ++) {%>
+                    <div style="height:80px;background:#fff;color:black;border-bottom:1px solid #dedede;cursor:pointer" data-infoID="<%=arr[i].id%>" class="currentInfo">
+                        <div style="display:flex;flex-direction:row;justify-content: space-between;flex-direction:row;padding:5px 3px">
+                            <p style="font-size:14px;color:#646464">No.
+                                <%=arr[i].id%>
+                            </p>
+                            <p style="color:#646464">
+                                咨询时间:<%=arr[i].ad_time%>
+                            </p>
+                        </div>
+                        <div style="display:flex;flex-direction:row;justify-content: space-between;flex-direction:row;padding:0px 2px 5px">
+                            <p style="font-size:20px"><span style="font-size:20px">姓名：<span style="font-weight:bold"><%=arr[i].name%></span></p>
+                            <p>adminstor:
+                                <%=arr[i].adminstor%>
+                            </p>
+                        </div>
+                        <div style="display:flex;flex-direction:row;justify-content: space-between;flex-direction:row;padding:0px 2px 5px">
+                            <p>
+                                <span style="color:#ff6920">客户意向度:</span>
+                                 {{if arr[i].intentionality==0}}
+                                <img src="./images/xin.png" alt="" width="10" height="10"> 
+                                {{else if arr[i].intentionality==1}}
+                                <img src="./images/xin.png" alt="" width="10" height="10"> 
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+
+                                {{else if arr[i].intentionality==2}}
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10"> 
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+
+                                {{else if arr[i].intentionality==3}}
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10"> 
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+
+                                {{else if arr[i].intentionality==4}}
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                <img src="./images/xin.png" alt="" width="10" height="10">
+                                {{/if}}
+                            </p>
+                            <p>
+                                <button class="layui-btn layui-btn-xs layui-btn-radius" data-id="<%=arr[i].id%>" id="addHuiFang">添加回访信息</button>
+                                <!-- btn_id绑定事件 -->
+                                <button class="btn_id layui-btn layui-btn-xs layui-btn-radius" style="background:#2F4056" data-id="<%=arr[i].id%>">转让</button>
+                            </p>
+                        </div>
+                    </div>
+                    <%}%>
+
+                        <%}%>
+    </script>
+    <!-- 预约信息-->
+    <script type="text/html" id="updateFormTemplate">
+        <div id="update_app" >
+                <div class="layui-form" action="" style="margin-top:10px">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name_up" lay-verify="required" autocomplete="off" placeholder="（必填）" class="layui-input" value="<%=obj.name%>">
+                            </div>
+        
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">年龄</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="age_up" autocomplete="off" class="layui-input" placeholder="请输入患者年龄" value="<%=obj.age%>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" pane="">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">性别</label>
+                            <div class="layui-input-inline">
+                                <select name="sex_up" lay-filter="sex_up" lay-verify="required" class="sex_up">
+                                    <%if(obj.sex==0){%>
+                                        <option value="0" class="sex" checked="">女</option>
+                                        <option value="1" class="sex" >男</option>
+
+                                    <%}else if(obj.sex==1){%>
+                                        <option value="1" class="sex" checked="">男</option>
+                                        <option value="0" class="sex" >女</option>
+                                    <%}%>
+                                </select>
+                            </div>
+                         
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">生日</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="birthday_up" id="birthday_up" placeholder="选择时间" autocomplete="off" class="layui-input" value="<%=obj.birthday%>">
+                            </div>
+                        </div>
+                    </div>
+                        <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">地址</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="address_up" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="<%=obj.address%>">
+                                    </div>
+                                </div>
+                        </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="email_up" autocomplete="off" class="layui-input" placeholder="请输入患者邮箱" value="<%=obj.email%>">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">手机</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="phone_up" autocomplete="off" class="layui-input" placeholder="请输入手机号"  value="<%=obj.phone%>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">QQ</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="qq_up" autocomplete="off" class="layui-input"  value="<%=obj.qq%>">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">微信</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="wechat_up" autocomplete="off" class="layui-input"  value="<%=obj.wechat%>">
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">预约日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="app_time_up" id="app_time_up" placeholder="请选择时间" autocomplete="off" class="layui-input" value="<%=obj.app_time%>">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">病种</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="type_up" autocomplete="off" class="layui-input" placeholder="请输入病种类型" value="<%=obj.type%>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" pane="">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">是否就诊</label>
+                            <div class="layui-input-inline">
+                                    <select name="is_jiuzhen_up" lay-filter="is_jiuzhen_up" lay-verify="required" class="is_jiuzhen_up">
+                                            <% if(obj.is_jiuzhen==0){%>
+                                                <option value="0" class="is_jizhen" checked="">未就诊</option>
+                                                <option value="1" class="is_jizhen">已就诊</option>
+                                            <%}else if(obj.is_jiuzhen==1){%>
+                                                <option value="1" class="is_jizhen" checked="">已就诊</option>
+                                                <option value="0" class="is_jizhen">未就诊</option>
+                                            <%}%>
+                                    </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">消费金额</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="price_up" autocomplete="off" class="layui-input" value="<%=obj.price%>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                            <label class="layui-form-label">渠道</label>
+                            <div class="layui-input-inline">
+                                <select name="channel_up" lay-filter="channel_up" lay-verify="required" class="channel_up">
+                                    <option value="<%=obj.channel%>"><%=obj.channel%></option>
+                                    <option value="百度推广(竞价)">百度推广(竞价)</option>
+                                    <option value="微博粉丝通">微博粉丝通</option>
+                                    <option value="美团大众">美团大众</option>
+                                    <option value="新氧">新氧</option>
+                                    <option value="更美">更美</option>
+                                    <option value="优化站">优化站</option>
+                                    <option value="免费微博">免费微博</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                        <label class="layui-form-label">推广人员</label>
+                        <div class="layui-input-inline">
+                            <select name="spread_up" lay-filter="spread_up" lay-verify="required" class="spread_up">
+                                <option value="<%=obj.spread%>"><%=obj.spread%></option>
+                                <option value="新媒体运营-刘用">新媒体运营-刘用</option>
+                                <option value="SEO优化-卢博雅">SEO优化-卢博雅</option>
+                                <option value="SEM竞价-张洪丽">SEM竞价-张洪丽</option>
+                                <option value="微博运营-李平">微博运营-李平</option>
+                                <option value="暂无">暂无</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">咨询时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="ad_time_up" id="ad_time_up" placeholder="请选择咨询时间(必选)" autocomplete="off" class="layui-input" value="<%=obj.ad_time%>">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">医院</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="hospital_up" lay-verify="" autocomplete="off" class="layui-input" class="hospital_up" value="<%=obj.hospital%>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" pane="">
+                        <label class="layui-form-label">用户意向度</label>
+                        <div class="layui-input-inline">
+                                <select name="intentionality_up" lay-filter="intentionality_up" lay-verify="required" class="intentionality_up">
+                                        <%if(obj.intentionality==0){%>
+                                            <option value="0" class="" checked="">一星</option>
+                                            <option value="1" class="" >二星</option>
+                                            <option value="2" class="" >三星</option>
+                                            <option value="3" class="" >四星</option>
+                                            <option value="4" class="" >五星</option>
+
+                                        <%}else if(obj.intentionality==1){%>
+                                            <option value="1" class="" checked="" >二星</option>
+                                            <option value="0" class="" >一星</option>
+                                            <option value="2" class="" >三星</option>
+                                            <option value="3" class="" >四星</option>
+                                            <option value="4" class="" >五星</option>
+                                        <%}else if(obj.intentionality==2){%>
+                                            <option value="2" class="" checked="" >三星</option>
+                                            <option value="0" class="" >一星</option>
+                                            <option value="1" class="" >二星</option>
+                                            <option value="3" class="" >四星</option>
+                                            <option value="4" class="" >五星</option>
+                                             
+                                        <%}else if(obj.intentionality==3){%>
+                                            <option value="3" class="" checked="">四星</option>
+                                            <option value="0" class="">一星</option>
+                                            <option value="1" class="" >二星</option>
+                                            <option value="2" class="" >三星</option>
+                                            <option value="4" class="" >五星</option>
+                                        <%}else if(obj.intentionality==4){%>
+                                            <option value="4" class=""  checked="">五星</option>
+                                            <option value="0" class="">一星</option>
+                                            <option value="1" class="" >二星</option>
+                                            <option value="2" class="" >三星</option>
+                                            <option value="3" class="" >四星</option>
+                                        <%}%>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-inline" style="width:500px">
+                            <textarea placeholder="备注" id="beizhu_up" name="beizhu_up" class="layui-textarea"><%=obj.beizhu%></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="addUser" id="addUser_up">修改</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </script>
+    <div id="app" style="display:none;"></div>
+    <!-- 患者信息-->
+    <script id="userInfoBox" type="text/html">
+        <div class="left">
+            <p><span style="font-size:18px">姓名</span>：<span class="nameSapn" style="font-size:16px;font-weight:bold"><%=arr.name%></span></p>
+            <p><span style="font-size:18px">性别</span>：{{if arr.sex==0}}<span class="sexSpan" style="font-size:16px">女</span>{{else if arr.sex==1}}<span style="font-size:20px" class="sexSpan">男</span></p>{{else}}{{/if}}
+            <p><span style="font-size:18px">年龄</span>：<span class="ageSpan" style="font-size:16px"><%=arr.age%></span></p>
+            <p><span style="font-size:18px">生日</span>：<span class="birthdaySpan" style="font-size:16px"><%=arr.birthday%></span></p>
+            <p><span style="font-size:18px">电话</span>：<span class="phoneSpan" style="font-size:16px;font-weight:bold"><%=arr.phone%></span></p>
+            <p><span style="font-size:18px">QQ</span>：<span class="qqSpan" style="font-size:16px"><%=arr.qq%></span></p>
+            <p><span style="font-size:18px">微信</span>：<span class="wechatSpan" style="font-size:16px"><%=arr.wechat%></span></p>
+            <p><span style="font-size:18px">邮箱</span>：<span class="emailSpan" style="font-size:16px"><%=arr.email%></span></p>
+
+        </div>
+        <div class="center">
+            <p><span style="font-size:18px">地址</span>：<span class="addressSpan" style="font-size:16px"><%=arr.address%></span></p>
+            <p><span style="font-size:18px">病种</span>：<span class="typeSpan" style="font-size:16px"><%=arr.type%></span></p>
+            <p><span style="font-size:18px">咨询时间</span>：<span class="adTimeSpan" style="font-size:16px"><%=arr.ad_time%></span></p>
+            <p><span style="font-size:18px">预约时间</span>：<span class="appTimeSpan" style="font-size:16px"><%=arr.app_time%></span></p>
+            <p><span style="font-size:18px">是否就诊</span>：
+                {{if arr.is_jiuzhen==0}}
+                <span class="isJiuZhenSpan" style="font-size:16px">未就诊</span>
+                {{else if arr.is_jiuzhen==1}}
+                    <span class="isJiuZhenSpan" style="font-size:16px">已就诊</span>
+                {{else}}{{/if}}
+
+            </p>
+            <p><span style="font-size:18px">渠道</span>：<span class="channelSpan" style="font-size:16px"><%=arr.channel%></span></p>
+            <p><span style="font-size:18px">消费金额</span>：<span class="priceSpan" style="font-size:16px"><%=arr.price%></span></p>
+        </div>
+        <div class="right">
+            <p><span style="font-size:18px">医院</span>：<span class="hospitalSpan" style="font-size:16px"><%=arr.hospital%></span></p>
+            <p><span style="font-size:18px">管理员</span>：<span class="adminstorSpan" style="font-size:16px"><%=arr.adminstor%></span></p>
+            <p><span style="font-size:18px">推广人员</span>：<span class="spreadSpan" style="font-size:16px"><%=arr.spread%></span></p>
+            <p><span style="font-size:18px">创建时间</span>：<span style="font-size:16px"><%=arr.create_time%></span></p>
+            <p><span style="font-size:18px">来源</span>：<span class="originSpan" style=" font-size:16px "><%=arr.origin%></span></p>
+    
+            <p><span style="font-size:18px ">客户意向度</span>：<span style="font-size:16px ">
+                {{if arr.intentionality==0}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                {{else if arr.intentionality==1}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+
+                {{else if arr.intentionality==2}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                {{else if arr.intentionality==3}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+
+                {{else if arr.intentionality==4}}
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                <img src="./images/xin.png " alt=" " width="10 " height="10 ">
+                  {{else}}
+               {{/if}}
+            </span></p>
+            <p><span style="font-size:18px ">备注</span>：<span class="beizhuSpan " style="font-size:20px "><%=arr.beizhu%></span>
+         </div>
+         <div>
+            <button data-id="<%=arr.id%>" id="updateUserInfo"	class="layui-btn">修改信息</button>
+         </div>
+    </script>
+    <!-- 回访信息 -->
+    <script id="userInfo_HF" type="text/html">
+        <table class="layui-table" lay-skin="line">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>状态</th>
+                    <th>回访人</th>
+                    <th>回访时间</th>
+                    <th>回访内容</th>
+                    <th>回访结果</th>
+                    <th>操作</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <%for(i=0;i<arr.length;i++){%>
+                    <tr>
+                        <td>
+                            <%=arr[i].id%>
+                        </td>
+                        <td>
+                            <%if(arr[i].status==0){%>
+                                <p style="color:#FFB800">待跟进</p>
+                                <%}else{%>
+                                    <p style="color:#5FB878">已回访</p>
+                            <%}%>
+                        </td>
+                        <td>
+                            <%=arr[i].adminstor%>
+                        </td>
+                        <td>
+                            <%=arr[i].b_time%>
+                        </td>
+                        <td>
+                            <%=arr[i].content%>
+                        </td>
+                        <td>
+                            <%=arr[i].result%>
+                        </td>
+                        <td><button data-id="<%=arr[i].id%>" data-customer_id="<%=arr[i].customer_id%>" class="updateHuiFang layui-btn layui-btn-sm">修改</button></td>
+
+                    </tr>
+                    <%}%>
+            </tbody>
+        </table>
+    </script>
+
+    <div id="update_app" style="display:none">
+            <div class="layui-form" action="" style="margin-top:10px">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name_up" lay-verify="required" autocomplete="off" placeholder="（必填）" class="layui-input">
+                        </div>
+    
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">年龄</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="age_up" autocomplete="off" class="layui-input" placeholder="请输入患者年龄">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" pane="">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="sex_up" autocomplete="off" class="layui-input" value="" placeholder="请输入患者性别" class="sex_up">
+                        </div>
+                        <!-- <div class="layui-input-inline">
+                            <select name="sex_up" lay-filter="sex_up" lay-verify="required" class="sex_up">
+                                <option value="0" class="sex0">女</option>
+                                <option value="1" class="sex1">男</option>
+                            </select>
+                        </div> -->
+                        <!-- <input type="radio" value="0" name="sex_up" class="sex_up_1">男
+                        <input type="radio" value="1" name="sex_up" class="sex_up_0">女 -->
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">生日</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="birthday_up" id="birthday_up" placeholder="选择时间" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">地址</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="address_up" autocomplete="off" class="layui-input" placeholder="请手动输入地址">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="email_up" autocomplete="off" class="layui-input" placeholder="请输入患者邮箱">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">手机</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" name="phone_up" autocomplete="off" class="layui-input" placeholder="请输入手机号">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">QQ</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="qq_up" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">微信</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="wechat_up" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">预约日期</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="app_time_up" id="app_time_up" placeholder="请选择时间" autocomplete="off" class="layui-input">
+    
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">病种</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="type_up" autocomplete="off" class="layui-input" placeholder="请输入病种类型">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" pane="">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否就诊</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="is_jiuzhen_up" autocomplete="off" class="layui-input"  placeholder="请输入已就诊或未就诊" class="is_jiuzhen_up">
+                        </div>
+                        <!-- <div class="layui-input-inline">
+                            <select name="is_jiuzhenf_up" lay-filter=.is_jiuzhen_up" lay-verify="required" class=.is_jiuzhen_up">
+                                                <option value="0">未就诊</option>
+                                                <option value="1">就诊</option>
+                             </select>
+                        </div> -->
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">消费金额</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="price_up" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">渠道</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="channel_up" autocomplete="off" class="layui-input" placeholder="请输入渠道" class="channel_up">
+                    </div>
+                    <label class="layui-form-label">推广人员</label>
+                    <!-- <div class="layui-input-inline">
+                        <select name="spread_up" lay-filter="" lay-verify="required" class="spread_up">
+                            <option value="">请选择(必选)</option>
+                            <option value="新媒体运营-刘用">新媒体运营-刘用</option>
+                            <option value="SEO优化-卢博雅">SEO优化-卢博雅</option>
+                            <option value="SEM竞价-张洪丽">SEM竞价-张洪丽</option>
+                            <option value="微博运营-李平">微博运营-李平</option>
+                            <option value="暂无">暂无</option>
+                        </select>
+                    </div> -->
+                    <div class="layui-input-inline">
+                        <input type="text" name="spread_up" autocomplete="off" class="layui-input" placeholder="请输入推广人员" class="spread_up">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">咨询时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="ad_time_up" id="ad_time_up" placeholder="请选择咨询时间(必选)" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">医院</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="hospital_up" lay-verify="" autocomplete="off" class="layui-input" class="hospital_up">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                </div>
+                <div class="layui-form-item" pane="">
+                    <label class="layui-form-label">用户意向度</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="intentionality_up" value="0" title="一星">
+                        <input type="radio" name="intentionality_up" value="1" title="二星">
+                        <input type="radio" name="intentionality_up" value="2" title="三星">
+                        <input type="radio" name="intentionality_up" value="3" title="四星">
+                        <input type="radio" name="intentionality_up" value="4" title="五星" checked="">
+                    </div>
+                </div>
+                <!-- <div class="layui-inline">
+                                <label class="layui-form-label">设置提醒</label>
+                                <div class="layui-input-inline">
+                                  <input type="text" class="layui-input" id="tixin-time" placeholder="yyyy-MM-dd HH:mm:ss">
+                                </div>
+                        </div> -->
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-inline" style="width:500px">
+                        <textarea placeholder="备注" id="beizhu_up" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="addUser" id="addUser_up">修改</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+</body>
+<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="./js/xadmin.js"></script>
+<script src="./js/xcity.js"></script>
+<script src="./js/until.js"></script>
+<script src="./lib/template-web.js"></script>
+<script>
+    $(function() {
+       var a =  $('#allAppoTab').attr('class') == 'layui-this';
+       var b =  $('#todayAppoTab').attr('class') == 'layui-this';
+       var c =  $('#todayWaitHuiFangTab').attr('class') == 'layui-this';
+      
+        var token = localStorage.getItem('token');
+        if (window.location.search) {
+            var action = window.location.search.split('=')[1];
+            if (action == 'myAppo') {
+                $('#UserList').addClass('layui-show');
+                $('#myToday').removeClass('layui-show');
+                $('#myHuiFang').removeClass('layui-show');
+                freshUserList();
+            }
+            if (action == 'myToday') {
+                $('#UserList').removeClass('layui-show');
+                $('#myToday').addClass('layui-show');
+                $('#myHuiFang').removeClass('layui-show');
+                freshMyTodayList();
+            }
+
+            if (action == 'myHuiFang') {
+                $('#UserList').removeClass('layui-show');
+                $('#myToday').removeClass('layui-show');
+                $('#myHuiFang').addClass('layui-show');
+                freshMyHuiFangList();
+            }
+        } else {
+            freshUserList() //默认显示所有信息
+        }
+        var pageIndex = 1; // 第一页
+        var pageSize = "" //一页显示多少
+        function myAjax(url, type, data, obj) {
+            var result = "";
+            $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                async: false,
+                headers: obj,
+                dataType: "json",
+                success: function(res) {
+                    result = res;
+                    resCode(res)
+                },
+                error: function (res) {
+                if (res.status == 500) {
+                        layer.msg('服务器内部错误，请稍后再试');
+                    }
+                }
+            })
+            return result;
+        }
+        // 状态码
+        function resCode(res){
+            var code=res.status_code;
+            switch (code) {
+                    case 200:
+                        break;
+                    case 30001:
+                        localStorage.clear(); //token过期
+                        location.href = './login.html';
+                        break;
+                    case 30002:
+                        localStorage.clear(); //token无效 
+                        location.href = './login.html';
+                        break;
+                    case 10004:
+                        console.log(111111);
+                        alert(res.message);
+                        break;
+                    case 20001:
+                        alert(res.message);
+                        break;
+                    default:
+                        alert(res.message);
+                        break;
+                }
+        }
+        // 刷新列表
+        function freshUserList() {
+            $('#allAppoTab').attr('class', 'layui-this');
+            var userList = myAjax("http://backstage.iyaa180.com:9501/customer", "get", {
+                page: pageIndex
+            }, {
+                'app-auth': 'ADGN ' + token
+            })
+            if(userList.status_code==200){
+                console.log(`所有预约--------------------------`);
+                console.log(userList);
+                $('#UserList').html(template("userInfoCard", {
+                    arr: userList.data
+                }))
+            }
+        }
+
+        function freshMyTodayList() {
+            $('#todayAppoTab').attr('class', 'layui-this');
+            var userList = myAjax("http://backstage.iyaa180.com:9501/customer", "get", {
+                self_today_total : 1,
+                page: pageIndex 
+            }, {
+                'app-auth': 'ADGN ' + token
+            })
+            if(userList.status_code==200){
+                console.log(`所有预约--------------------------`);
+                console.log(userList);
+                $('#myToday').html(template("userInfoCard", {
+                    arr: userList.data
+                }))
+            }
+
+            if (userList.status_code == 10004) {
+                $('#myToday').html('<div style="height:100%;width100%;background:#fff;position:relative"><p style="display:block;position:absolute;top:50%;left:50%;transform: translate(-50%,-50%);font-size:30px;color:#375f89"> 暂无权限查看 </p></div>');
+            }
+        }
+
+        function freshMyHuiFangList() {
+            $('#todayWaitHuiFangTab').attr('class', 'layui-this');
+
+            var userList = myAjax("http://backstage.iyaa180.com:9501/customer", "get", {
+                today_wait_backvist : 1,
+                page: pageIndex 
+            }, {
+                'app-auth': 'ADGN ' + token
+            })
+            if(userList.status_code==200){
+                console.log(`所有预约--------------------------`);
+                console.log(userList);
+                $('#myHuiFang').html(template("userInfoCard", {
+                    arr: userList.data
+                }))
+            }
+
+            if (userList.status_code == 10004) {
+                $('#myHuiFang').html('<div style="height:100%;width100%;background:#fff;position:relative"><p style="display:block;position:absolute;top:50%;left:50%;transform: translate(-50%,-50%);font-size:30px;color:#375f89"> 暂无权限查看 </p></div>');
+            }
+        }
+        
+        // 显示预约的当前详细信息
+        function showUserInfo(id) {
+            var currentInfoRes = myAjax("http://backstage.iyaa180.com:9501/customer/info", "get", {
+                id: id
+            }, {
+                'app-auth': 'ADGN ' + token
+            })
+            console.log(`当前预约信息--------------------------`);
+            console.log(currentInfoRes);
+            if(currentInfoRes.status_code==200){
+                $('#info-box').html(template("userInfoBox", {arr: currentInfoRes.data}))
+            }
+        }
+        // 预约回访记录
+        function showUserInfo_HF(id) {
+            var currentUser_HF = myAjax("http://backstage.iyaa180.com:9501/backvisit", "get", {customer_id: id}, {'app-auth': 'ADGN ' + token})
+            console.log(`当前预约回访记录--------------------------`);
+            console.log(currentUser_HF);
+            if(currentUser_HF.status_code==200){
+                $('#huifang-box').html(template("userInfo_HF", {arr: currentUser_HF.data}))
+            }
+        }
+        //默认显示第一个预约 
+        var firstID = $("#UserList div").eq(0).data("infoid");
+        showUserInfo(firstID)
+        showUserInfo_HF(firstID)
+        // 点击显示
+        $("#UserList").on("click", ".currentInfo", function(event) {
+            // $(event.currentTarget).css({backgroundColor:"#2c9afa"}).find("p").css("color","#fff").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            $(event.currentTarget).css({backgroundColor:"rgb(242, 242, 242)"}).find("p").css("color","black").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            var currentId = $(event.currentTarget).data("infoid")
+            showUserInfo(currentId)
+            showUserInfo_HF(currentId)
+        })
+
+$("#myToday").on("click", ".currentInfo", function(event) {
+            // $(event.currentTarget).css({backgroundColor:"#2c9afa"}).find("p").css("color","#fff").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            $(event.currentTarget).css({backgroundColor:"rgb(242, 242, 242)"}).find("p").css("color","black").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            var currentId = $(event.currentTarget).data("infoid")
+            showUserInfo(currentId)
+            showUserInfo_HF(currentId)
+        })
+
+$("#myHuiFang").on("click", ".currentInfo", function(event) {
+            // $(event.currentTarget).css({backgroundColor:"#2c9afa"}).find("p").css("color","#fff").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            $(event.currentTarget).css({backgroundColor:"rgb(242, 242, 242)"}).find("p").css("color","black").end().siblings().css({ backgroundColor:"#fff"}).find("p").css("color","black")
+            var currentId = $(event.currentTarget).data("infoid")
+            showUserInfo(currentId)
+            showUserInfo_HF(currentId)
+        })
+           //时间段查询
+           $(".queryByDate").on("click").click(function(){
+            var time=$(".queryByDate_input").val();
+            var timeArr=time.split("-")
+            var a=timeArr[0]+"-"+timeArr[1]+"-"+timeArr[2];
+            var b=timeArr[3]+"-"+timeArr[4]+"-"+timeArr[5];
+            var startTime=a.trim()
+            var endTime=b.trim()
+            
+                var userListQueryByTime = myAjax("http://backstage.iyaa180.com:9501/customer", "get", {
+                    start_time:startTime,
+                    end_time:endTime,
+                    key_word:$('#queryByName').val()
+                }, {
+                    'app-auth': 'ADGN ' + token
+                })
+                console.log(userListQueryByTime);
+                if(userListQueryByTime.status_code==200){
+                    $('#UserList').html(template("userInfoCard", {
+                        arr: userListQueryByTime.data
+                    }))
+                    showUserInfo(userListQueryByTime.data[0].id)  //显示当前第一条添加的预约信息
+                    showUserInfo_HF(userListQueryByTime.data[0].id) //显示当前第一天添加的预约回访信息
+                }
+            
+        })
+        // 搜索
+        $("#queryByName").on("keydown", function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                var key_word = $(this).val()
+                var userList = myAjax("http://backstage.iyaa180.com:9501/customer", "get", {
+                    key_word: key_word
+                }, {
+                    'app-auth': 'ADGN ' + token
+                })
+                console.log(userList);
+                if(userList.status_code==200){
+                    $('#UserList').html(template("userInfoCard", {
+                        arr: userList.data
+                    }))
+                    // $('#myToday').html(template("userInfoCard", {
+                    //     arr: userList.data
+                    // }))
+                    // $('#myHuiFang').html(template("userInfoCard", {
+                    //     arr: userList.data
+                    // }))
+                    showUserInfo(userList.data[0].id)  //显示当前添加的预约信息
+                    showUserInfo_HF(userList.data[0].id) //显示当前添加的预约回访信息
+                }
+            }
+        })
+        //  修改回访信息
+        $("#huifang-box").on("click", ".updateHuiFang", function(event) {
+                console.log(event.target);
+                var updateCurId = $(event.currentTarget).data("id");
+                var updateCurId_customer = $(event.currentTarget).data("customer_id");
+                var updateHFAlert = layer.open({
+                    type: 1,
+                    title: "修改回访记录",
+                    area: ["400x", "auto"],
+                    content: $("#updateHuiFangAlert")
+                })
+                $(".updateHF_btn").unbind("click").click(function(event) {
+                    var content_up = $("#content_up").val();
+                    var b_time_up = $("#b_time_up").val();
+                    var status_up = $("input[name='status_up']:checked").val();
+                    var result_up = $("#result_up").val()
+                    var updataRes_HF = myAjax("http://backstage.iyaa180.com:9501/backvisit/update", "patch", {
+                        backvisit_id: updateCurId,
+                        content: content_up,
+                        status: status_up,
+                        result: result_up
+                    }, {
+                        'app-auth': 'ADGN ' + token
+                    })
+                    console.log(updataRes_HF);
+                    if (updataRes_HF.status_code == 200) {
+                        layer.msg(updataRes_HF.message, {
+                            time: 500
+                        }, function() {
+                            layer.close(updateHFAlert)
+                            showUserInfo_HF(updateCurId_customer)
+                        })
+                    } else {
+                        layer.msg(updataRes_HF.message, function() {})
+                    }
+                })
+            })
+            //  添加回访信息
+        $("#UserList").on("click", "#addHuiFang", function(event) {
+            console.log(event.currentTarget);
+            var curInfoId = $(event.currentTarget).data("id")
+            huiFangAlert_ = layer.open({
+                type: 1,
+                title: "添加回访记录",
+                area: ["50%", "auto"],
+                content: $("#addHuiFangAlert")
+            })
+            $(".addHF_btn").unbind("click").click(function() {
+                var content = $("#content").val();
+                var b_time = $("#b_time").val();
+                var status = $("input[name='status']:checked").val();
+                var result = $("#result").val()
+                console.log(content);
+                console.log(b_time);
+                console.log(status);
+                console.log(result);
+                if (content == "" || content == undefined || content == null || b_time == "" || b_time == undefined || b_time == null) {
+                    alert("请填写必要字段")
+                } else {
+                    var hf_res = myAjax("http://backstage.iyaa180.com:9501/backvisit/store", "post", {
+                        customer_id: curInfoId,
+                        content: content,
+                        b_time: b_time,
+                        status: status,
+                        result: result
+                    }, {
+                        'app-auth': 'ADGN ' + token
+                    })
+                    if (hf_res.status_code == 200) {
+                        layer.msg(hf_res.message, {
+                            time: 500
+                        }, function() {
+                            layer.close(huiFangAlert_)
+                            $.ajax({
+                                url: baseURL.API + "/backvisit",
+                                type: "get",
+                                dataType: "json",
+                                data: {
+                                    customer_id: curInfoId
+                                },
+                                headers: {
+                                    'app-auth': 'ADGN ' + token
+                                },
+                                success: function(res) {
+                                    $("#content").val("")
+                                    $("#b_time").val("")
+                                    $("#result").val("")
+                                    showUserInfo_HF(curInfoId)
+                                }
+                            })
+                        })
+                    }
+                }
+            })
+        })
+
+        $("#myToday").on("click", "#addHuiFang", function(event) {
+            console.log(event.currentTarget);
+            var curInfoId = $(event.currentTarget).data("id")
+            huiFangAlert_ = layer.open({
+                type: 1,
+                title: "添加回访记录",
+                area: ["50%", "auto"],
+                content: $("#addHuiFangAlert")
+            })
+            $(".addHF_btn").unbind("click").click(function() {
+                var content = $("#content").val();
+                var b_time = $("#b_time").val();
+                var status = $("input[name='status']:checked").val();
+                var result = $("#result").val()
+                console.log(content);
+                console.log(b_time);
+                console.log(status);
+                console.log(result);
+                if (content == "" || content == undefined || content == null || b_time == "" || b_time == undefined || b_time == null) {
+                    alert("请填写必要字段")
+                } else {
+                    var hf_res = myAjax("http://backstage.iyaa180.com:9501/backvisit/store", "post", {
+                        customer_id: curInfoId,
+                        content: content,
+                        b_time: b_time,
+                        status: status,
+                        result: result
+                    }, {
+                        'app-auth': 'ADGN ' + token
+                    })
+                    if (hf_res.status_code == 200) {
+                        layer.msg(hf_res.message, {
+                            time: 500
+                        }, function() {
+                            layer.close(huiFangAlert_)
+                            $.ajax({
+                                url: baseURL.API + "/backvisit",
+                                type: "get",
+                                dataType: "json",
+                                data: {
+                                    customer_id: curInfoId
+                                },
+                                headers: {
+                                    'app-auth': 'ADGN ' + token
+                                },
+                                success: function(res) {
+                                    $("#content").val("")
+                                    $("#b_time").val("")
+                                    $("#result").val("")
+                                    showUserInfo_HF(curInfoId)
+                                }
+                            })
+                        })
+                    }
+                }
+            })
+        })
+
+$("#myHuiFang").on("click", "#addHuiFang", function(event) {
+            console.log(event.currentTarget);
+            var curInfoId = $(event.currentTarget).data("id")
+            huiFangAlert_ = layer.open({
+                type: 1,
+                title: "添加回访记录",
+                area: ["50%", "auto"],
+                content: $("#addHuiFangAlert")
+            })
+            $(".addHF_btn").unbind("click").click(function() {
+                var content = $("#content").val();
+                var b_time = $("#b_time").val();
+                var status = $("input[name='status']:checked").val();
+                var result = $("#result").val()
+                console.log(content);
+                console.log(b_time);
+                console.log(status);
+                console.log(result);
+                if (content == "" || content == undefined || content == null || b_time == "" || b_time == undefined || b_time == null) {
+                    alert("请填写必要字段")
+                } else {
+                    var hf_res = myAjax("http://backstage.iyaa180.com:9501/backvisit/store", "post", {
+                        customer_id: curInfoId,
+                        content: content,
+                        b_time: b_time,
+                        status: status,
+                        result: result
+                    }, {
+                        'app-auth': 'ADGN ' + token
+                    })
+                    if (hf_res.status_code == 200) {
+                        layer.msg(hf_res.message, {
+                            time: 500
+                        }, function() {
+                            layer.close(huiFangAlert_)
+                            $.ajax({
+                                url: baseURL.API + "/backvisit",
+                                type: "get",
+                                dataType: "json",
+                                data: {
+                                    customer_id: curInfoId
+                                },
+                                headers: {
+                                    'app-auth': 'ADGN ' + token
+                                },
+                                success: function(res) {
+                                    $("#content").val("")
+                                    $("#b_time").val("")
+                                    $("#result").val("")
+                                    showUserInfo_HF(curInfoId)
+                                }
+                            })
+                        })
+                    }
+                }
+            })
+        })
+
+        // 转换按钮 点击后获取到id 动态显示option
+        $("#UserList").on("click", ".btn_id", function(event) {
+                var curInfoId = $(event.currentTarget).data("id")
+                $("select[name='admin-list']").children().remove()
+                var transferAlert = layer.open({
+                        type: 1,
+                        title: "选择转给谁",
+                        content: $(".transfer"),
+                        area: ["40%", "auto"],
+                        success: function() {
+                            $.ajax({
+                                url: baseURL.API + "/admin",
+                                type: "get",
+                                dataType: "json",
+                                headers: {
+                                    'app-auth': 'ADGN ' + token
+                                },
+                                success: function(res) {
+                                    console.log(res.data);
+                                    for (var i = 0; i < res.data.length; i++) {
+                                        $("select[name='admin-list']").append("<option value=" + res.data[i].name + ">" + res.data[i].name + "</option>")
+                                    }
+                                }
+                            })
+                        }
+                    })
+                    // 点击确定 转换
+                $(".yes-admin").unbind("click").click(function() {
+                    var admin_name = $("select[name='admin-list'] option:checked").val()
+                    $.ajax({
+                        url: baseURL.API + "/customer/transfer",
+                        type: "patch",
+                        dataType: "json",
+                        data: {
+                            customer_id: curInfoId,
+                            admin: admin_name
+                        },
+                        headers: {
+                            'app-auth': 'ADGN ' + token
+                        },
+                        success: function(res) {
+                            console.log(res);
+                            if (res.status_code == 200) {
+                                layer.close(transferAlert)
+                                layer.msg(res.message, {
+                                    time: 500
+                                }, function() {
+                                    freshUserList()
+                                })
+                            }
+                        }
+                    })
+                })
+            })
+
+            $("#myToday").on("click", ".btn_id", function(event) {
+                var curInfoId = $(event.currentTarget).data("id")
+                $("select[name='admin-list']").children().remove()
+                var transferAlert = layer.open({
+                        type: 1,
+                        title: "选择转给谁",
+                        content: $(".transfer"),
+                        area: ["400x", "auto"],
+                        success: function() {
+                            $.ajax({
+                                url: baseURL.API + "/admin",
+                                type: "get",
+                                dataType: "json",
+                                headers: {
+                                    'app-auth': 'ADGN ' + token
+                                },
+                                success: function(res) {
+                                    console.log(res.data);
+                                    for (var i = 0; i < res.data.length; i++) {
+                                        $("select[name='admin-list']").append("<option value=" + res.data[i].name + ">" + res.data[i].name + "</option>")
+                                    }
+                                }
+                            })
+                        }
+                    })
+                    // 点击确定 转换
+                $(".yes-admin").unbind("click").click(function() {
+                    var admin_name = $("select[name='admin-list'] option:checked").val()
+                    $.ajax({
+                        url: baseURL.API + "/customer/transfer",
+                        type: "patch",
+                        dataType: "json",
+                        data: {
+                            customer_id: curInfoId,
+                            admin: admin_name
+                        },
+                        headers: {
+                            'app-auth': 'ADGN ' + token
+                        },
+                        success: function(res) {
+                            console.log(res);
+                            if (res.status_code == 200) {
+                                layer.close(transferAlert)
+                                layer.msg(res.message, {
+                                    time: 500
+                                }, function() {
+                                    freshMyTodayList()
+                                })
+                            }
+                        }
+                    })
+                })
+            })
+
+$("#myHuiFang").on("click", ".btn_id", function(event) {
+                var curInfoId = $(event.currentTarget).data("id")
+                $("select[name='admin-list']").children().remove()
+                var transferAlert = layer.open({
+                        type: 1,
+                        title: "选择转给谁",
+                        content: $(".transfer"),
+                        area: ["400x", "auto"],
+                        success: function() {
+                            $.ajax({
+                                url: baseURL.API + "/admin",
+                                type: "get",
+                                dataType: "json",
+                                headers: {
+                                    'app-auth': 'ADGN ' + token
+                                },
+                                success: function(res) {
+                                    console.log(res.data);
+                                    for (var i = 0; i < res.data.length; i++) {
+                                        $("select[name='admin-list']").append("<option value=" + res.data[i].name + ">" + res.data[i].name + "</option>")
+                                    }
+                                }
+                            })
+                        }
+                    })
+                    // 点击确定 转换
+                $(".yes-admin").unbind("click").click(function() {
+                    var admin_name = $("select[name='admin-list'] option:checked").val()
+                    $.ajax({
+                        url: baseURL.API + "/customer/transfer",
+                        type: "patch",
+                        dataType: "json",
+                        data: {
+                            customer_id: curInfoId,
+                            admin: admin_name
+                        },
+                        headers: {
+                            'app-auth': 'ADGN ' + token
+                        },
+                        success: function(res) {
+                            console.log(res);
+                            if (res.status_code == 200) {
+                                layer.close(transferAlert)
+                                layer.msg(res.message, {
+                                    time: 500
+                                }, function() {
+                                    freshMyHuiFangList()
+                                })
+                            }
+                        }
+                    })
+                })
+            })
+            layui.use(['element', 'layer', 'util', 'form', 'layedit', 'laydate', "code"], function() {
+        //修改患者信息
+$("#info-box").on("click", "#updateUserInfo", function(event) {
+            var update_btn_id=$(event.currentTarget).data("id")
+            updataUserAlert = layer.open({
+                type: 1,
+                area: ["800px", "600px"],
+                skin: 'layui-layer-lan',
+                anim: 4,
+                moveOut: true,
+                title: "修改患者",
+                // shadeClose:true,
+                content: $("#app"),
+                success:function(){
+
+                    var currentInfoRes = myAjax("http://backstage.iyaa180.com:9501/customer/info", "get", {
+                        id:update_btn_id
+                    }, {
+                        'app-auth': 'ADGN ' + token
+                    })
+                console.log(currentInfoRes);
+                $("#app").html(template("updateFormTemplate",{obj:currentInfoRes.data})) //动态取得当前患者id 弹出后 追加修改模板
+                form.render();
+                    // var address=currentInfoRes.data.address;
+                    // var addressArr=address.split("-")
+                    // console.log(addressArr);    
+                    
+                    // layui.use(['form', 'code'], function() {
+                    //     form = layui.form;
+                    //     layui.code();
+                    //     if(addressArr.length==3){
+                    //         $('#x-city').xcity(addressArr[0],addressArr[1],addressArr[2]);
+                    //     }else if(addressArr.length==2){
+                    //         $('#x-city').xcity(addressArr[0],addressArr[1]);
+                    //     }else if(addressArr.length==1){
+                    //         $('#x-city').xcity(addressArr[0]);
+
+                    //     }
+                    // });
+                }
+            })  
+             $("#addUser_up").unbind("click").click(function() {
+                
+                var name_up = $("input[name='name_up']").val()
+                var sex_up=$(".sex_up option:checked").val()
+                var age_up = $("input[name='age_up']").val()
+                var birthday_up = $("input[name='birthday_up']").val()
+                // var address_up =$(".province_up option:selected").val()+"-"+$(".city_up option:selected").val()+"-"+$(".area_up option:selected").val()
+                var address_up=$("input[name='address_up']").val()
+                var qq_up= $("input[name='qq_up']").val()
+                var email_up = $("input[name='email_up']").val()
+                var phone_up = $("input[name='phone_up']").val()
+                var wechat_up = $("input[name='wechat_up']").val()
+                var app_time_up = $("input[name='app_time_up']").val()
+                var type_up = $("input[name='type_up']").val()
+                var is_jiuzhen_up = $(".is_jiuzhen_up").val()
+                var channel_up = $(".channel_up option:checked").val() //渠道
+                var spread_up = $(".spread_up option:selected").val() //推广
+                var hospital_up= $("input[name='hospital_up']").val()
+                // var intentionality_up = $("input[name='intentionality_up']:checked").val() //满意度
+                var intentionality_up = $(".intentionality_up option:checked").val() 
+                var price_up = $("input[name='price_up']").val()
+                var ad_time_up = $("input[name='ad_time_up']").val() //咨询时间
+                var beizhu_up = $("#beizhu_up").val()
+
+                console.log(`${spread_up} -ddffddddddddddddddddd`);
+                if (name_up == "" || name_up == null || name_up == undefined||channel_up==""||channel_up==undefined||channel_up==null||spread_up==""||spread_up==null||spread_up==undefined||ad_time_up==""||ad_time_up==null||ad_time_up==undefined) {
+                    layer.msg("请填写必要字段", {
+                        icon: 5
+                    })
+                } else {
+                    $.ajax({
+                        url: "http://backstage.iyaa180.com:9501/customer/update",
+                        type: "patch",
+                        data: {
+                            id:update_btn_id,
+                            name: name_up,
+                            sex:sex_up,
+                            age: age_up,
+                            birthday: birthday_up,
+                            address: address_up,
+                            qq: qq_up,
+                            email: email_up,
+                            phone: phone_up,
+                            wechat: wechat_up,
+                            app_time: app_time_up,
+                            type: type_up,
+                            is_jiuzhen:is_jiuzhen_up,
+                            channel:channel_up,
+                            spread:spread_up,
+                            hospital: hospital_up,
+                            intentionality: intentionality_up,
+                            price: price_up,
+                            ad_time: ad_time_up,
+                            beizhu: beizhu_up
+                        },
+                        dataType: "json",
+                        headers: {
+                            'app-auth': 'ADGN ' + token
+                        },
+                        success: function(res) {
+                            console.log(res);
+                            if (res.status_code == 200) {
+                                layer.msg(res.message, {
+                                    time: 500
+                                }, function() {
+                                    layer.close(updataUserAlert)
+                                    freshUserList()
+                                    showUserInfo(update_btn_id)
+                                        // window.location.reload(0)
+                                })
+                            } else {
+                                layer.msg(res.message, function() {
+                                    // layer.close(updateAppAlert)
+                                })
+                            }
+                        }
+                    })
+                }
+                return false;
+            })
+        })
+
+       
+                var util = layui.util;
+                var element = layui.element;
+                layer = layui.layer;
+                var form = layui.form;
+                var layedit = layui.layedit
+                var laydate = layui.laydate;
+                element.on('tabDelete(demo)', function(data){
+                    console.log(this); //当前Tab标题所在的原始DOM元素
+                    console.log(data.index); //得到当前Tab的所在下标
+                    console.log(data.elem); //得到当前的Tab大容器
+                });
+                element.on('collapse(demo2)', function(data) {
+                    //data.show得到当前面板的展开状态，true或者false   data.title得到当前点击面板的标题区域DOM对象   data.content得到当前点击面板的内容区域DOM对象
+                    var collapseFlag = data.show
+                });
+                element.on('tab(demo)', function(data) {
+          
+                    //this 当前Tab标题所在的原始DOM元素 data.index 得到当前Tab的所在下标n data.elem得到当前的Tab大容器
+                    if (data.index == 0) {
+                        //模板渲染完成之后回调函数执行  
+                        // $(".layui-collapse .layui-colla-content").eq(data.index).addClass("layui-show")
+                        // alert("hello world")
+                        a = true;
+                        b = false;
+                        c = false;
+                        freshUserList()
+                        $("#queryByName").val("");
+
+                    }
+
+                    if (data.index == 1) {
+                        a = false;
+                        b = true;
+                        c = false;
+                        freshMyTodayList();
+                        $("#queryByName").val("");
+                    }
+                    
+                    if (data.index == 2) {
+                        a = false;
+                        b = false;
+                        c = true;
+                        freshMyHuiFangList();
+                        $("#queryByName").val("");
+                    }
+
+                    if (data.index == 3) {
+                        
+                        addAppAlert = layer.open({
+                            type: 1,
+                            area: ["800px", "600px"],
+                            skin: 'layui-layer-lan',
+                            anim: 4,
+                            moveOut: true,
+                            title: "添加预约",
+                            // shadeClose:true,
+                            content: $("#add_app"),
+                            end:function(){
+                                $("input[name='name']").val("")
+                                $("input[name='email']").val("")
+                                $("input[name='hospital']").val("")
+                                $("input[name='birthday']").val("")
+                                $("input[name='phone']").val("")
+                                $("input[name='qq']").val("")
+                                $("input[name='wechat']").val("")
+                                $("input[name='age']").val("")
+                                $("input[name='type']").val("")
+                                $("input[name='app_time']").val("")
+                                $("input[name='is_jiuzhen']:checked").val("")
+                                $("#beizhu").val("")
+                                $("input[name='price']").val("")
+                                $("input[name='ad_time']").val("")
+                                    // 三级联动
+                                layui.use(['form', 'code'], function() {
+                                    form = layui.form;
+                                    layui.code();
+                                    $('#x-city').xcity();
+
+                                });
+                            }
+                        });
+                        $("#addUser").unbind("click").click(function() {
+                            
+                            var name = $("input[name='name']").val()
+                            var email = $("input[name='email']").val()
+                            var province = $(".province option:selected").val()
+                            var city = $(".city option:selected").val()
+                            var area = $(".area option:selected").val()
+                            var address = province + "" + city + "" + area;
+                            var birthday = $("input[name='birthday']").val()
+                            var phone = $("input[name='phone']").val()
+                            var qq = $("input[name='qq']").val()
+                            var wechat = $("input[name='wechat']").val()
+                            var age = $("input[name='age']").val()
+                            var sex = $("input[name='sex']:checked").val()
+                            var type = $("input[name='type']").val()
+                            var app_time = $("input[name='app_time']").val()
+                            var is_jiuzhen = $("input[name='is_jiuzhen']:checked").val()
+                            var channel = $(".channel option:checked").val() //渠道
+                            var spread = $(".spread option:selected").val() //推广
+                            var price = $("input[name='price']").val()
+                            var intentionality = $("input[name='intentionality']:checked").val() //满意度
+                            var hospital = $("input[name='hospital']").val()
+                            var ad_time= $("input[name='ad_time']").val() //咨询时间
+                            var beizhu = $("#beizhu").val()
+                            if (name == "" || name == null || name == undefined||channel==""||channel==undefined||channel==null||spread==""||spread==null||spread==undefined||ad_time==""||ad_time==null||ad_time==undefined) {
+                                layer.msg("请将必要信息填写完整", {
+                                    icon: 5
+                                })
+                            } else {
+                                $.ajax({
+                                    url: "http://backstage.iyaa180.com:9501/customer/store",
+                                    type: "post",
+                                    data: {
+                                        name: name,
+                                        email: email,
+                                        address: address,
+                                        birthday: birthday,
+                                        phone: phone,
+                                        qq: qq,
+                                        wechat: wechat,
+                                        age: age,
+                                        sex: sex,
+                                        type: type,
+                                        app_time: app_time,
+                                        is_jiuzhen: is_jiuzhen,
+                                        channel: channel,
+                                        price: price,
+                                        hospital: hospital,
+                                        intentionality: intentionality,
+                                        ad_time: ad_time,
+                                        spread: spread,
+                                        beizhu: beizhu
+                                    },
+                                    dataType: "json",
+                                    headers: {
+                                        'app-auth': 'ADGN ' + token
+                                    },
+                                    success: function(res) {
+                                        
+                                        if (res.status_code == 200) {
+                                            
+                                            if (a) {
+                                                freshUserList();
+                                            } else if (b) {
+                                                freshMyTodayList();
+                                            } else if (c) {
+                                                freshMyHuiFangList();
+                                            }
+                                            layer.msg(res.message, {
+                                                time: 500
+                                            }, function() { 
+                                                layer.close(addAppAlert)
+                                                var addLastUserId=$(".currentInfo:last").data("infoid"); //获取添加后的id
+                                                    
+                                                 var currentInfoRes = myAjax("http://backstage.iyaa180.com:9501/customer/info", "get", {
+                                                    id: addLastUserId
+                                                }, {
+                                                    'app-auth': 'ADGN ' + token
+                                                })
+                                                console.log(`当前预约信息--------------------------`);
+                                                console.log(currentInfoRes);
+                                                if(currentInfoRes.status_code==200){
+                                                    $('#info-box').html(template("userInfoBox", {arr: currentInfoRes.data}))
+                                                }
+
+                                                showUserInfo_HF(addLastUserId) //显示当前添加的预约回访信息
+
+
+                                            })
+                                        } else {
+                                            layer.msg(res.message, function() {
+                                                layer.close(addAppAlert)
+
+                                            })
+                                        }
+                                    }
+                                })
+                            }
+                            return false;
+                        })
+                    }
+                });
+                
+                //日期控件
+                laydate.render({
+                    elem: '#birthday'
+                });
+                laydate.render({
+                    elem: '#app_time'
+                });
+                laydate.render({
+                    elem: '#ad_time',
+                });
+                laydate.render({
+                    elem: '#b_time',
+                    type: 'datetime'
+                });
+                laydate.render({
+                    elem: '#birthday_up'
+                });
+                laydate.render({
+                    elem: '#app_time_up'
+                });
+                laydate.render({
+                    elem: '#ad_time_up',
+                });
+                laydate.render({
+                    elem: '#b_time_up',
+                    type: 'datetime'
+                });
+                  //日期范围
+                  laydate.render({
+                    elem: '.queryByDate_input'
+                    ,range: true
+                });
+            })
+            // 三级联动
+        layui.use(['form', 'code'], function() {
+            form = layui.form;
+            layui.code();
+            $('#x-city').xcity();
+
+        });
+
+    })
+</script>
+
+</html>

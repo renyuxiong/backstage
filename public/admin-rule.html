@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>权限管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    
+  
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <!-- <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="./index.html">首页</a>
+        <a> <cite>管理员列表</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div> -->
+    <div class="x-body" style="padding: 0">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="demoTable">
+                  <form action="" class="layui-form">
+                    <div class="layui-form-item" style="margin:0">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">权限路由</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="qx_route" class="layui-input" placeholder="请输入权限路由">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">权限类型</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="qx_type" class="layui-input" placeholder="请输入权限类型"> 
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">权限名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="qx_name" class="layui-input" placeholder="请输入权限名称"> 
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn" id="addQX">添加权限</button>
+                        </div>
+
+                    </div>
+                  </form>
+                </div>
+                    <table id="qxTable" lay-filter="qxTable"></table>
+            </div>
+        </div>
+    </div>
+
+
+
+   
+  </body>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+  <script type="text/javascript" src="./js/xadmin.js"></script>
+  <script>
+    $(function(){
+      layui.use(['element','form', 'layedit', 'laydate',"table","laytpl","layer"], function(){
+        var element = layui.element,
+            form = layui.form
+            ,table = layui.table
+            laytpl = layui.laytpl
+            ,layer = layui.layer
+       
+    //权限列表
+       qxTable=table.render({
+                  elem: '#qxTable',
+                  skin: "line",
+                  height:'full-200',
+                  url:"http://backstage.iyaa180.com:9501/action",
+                  // toolbar: '#toolbarDemo',
+                  cols: [
+                    [
+                        {
+                            title: 'ID',
+                            field: 'id',
+                            align: 'center',
+                        },
+                        {
+                            title: '权限名称',
+                            field: 'name',
+                            align: 'center',
+                        },
+                        {
+                            title: '权限路由',
+                            field: 'route',
+                            align: 'center',
+                        },
+                        {
+                            title: '权限类型',
+                            field: 'type',
+                            align: 'center',
+                        },
+                    ]
+                  ],
+                  response: {
+                      statusName: 'status_code',
+                      statusCode: 200 ,
+                      msg:"message"
+                  }
+              });
+            })
+        })
+          $("#addQX").unbind("click").click(function(){
+                var qx_route=$("#qx_route").val().trim();
+                var qx_type=$("#qx_type").val().trim();
+                var qx_name=$("#qx_name").val().trim();
+                if(qx_route==""||qx_type==""||qx_name==""){
+                    layer.msg("请填写字段",function(){
+                     })
+                }else{
+                    $.ajax({
+                    url:"http://backstage.iyaa180.com:9501/action/store",
+                    type:"post",
+                    data:{
+                          route:qx_route,
+                          type:qx_type,
+                          name:qx_name
+                    },
+                    dataType:"json",
+                    success:function(res){
+                        console.log(res);
+                        if(res.status_code==200){
+                            layer.msg(res.message,{time:500},function(){
+                                qxTable.reload({})
+                            })
+                        }else{
+                            layer.msg(res.message, {
+                                offset: 'center',
+                                anim: 6,
+                            });
+                        }
+                    }
+                })
+                }
+                return false;
+            })
+  </script>
+
+</html>

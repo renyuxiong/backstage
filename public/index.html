@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>挂号预约系统</title>
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <link rel="stylesheet" href="https://g-eeboo-1252438738.cos.ap-shanghai.myqcloud.com/js/toastr.min.css">
+    <style>
+        #toast-container>div {
+            width: inherit !important;
+        }
+    </style>
+
+</head>
+<body>
+    <!-- 顶部开始 -->
+    <div class="container">
+        <div class="logo"><a href="javascript:void(0);">上海天医挂号预约系统</a></div>
+        <div class="left_open">
+            <i title="展开左侧栏" class="iconfont">&#xe699;</i>
+        </div>
+        <!-- <ul class="layui-nav left fast-add" lay-filter="">
+          <li class="layui-nav-item">
+            <a href="javascript:void(0);">+新增</a>
+            <dl class="layui-nav-child">
+              <dd><a onclick="x_admin_show('哈哈','http://www.baidu.com')"><i class="iconfont">&#xe6a2;</i>资讯</a></dd>
+              <dd><a onclick="x_admin_show('图片','http://www.baidu.com')"><i class="iconfont">&#xe6a8;</i>图片</a></dd>
+               <dd><a onclick="x_admin_show('用户','http://www.baidu.com')"><i class="iconfont">&#xe6b8;</i>用户</a></dd>
+            </dl>
+          </li>
+        </ul> -->
+        <ul class="layui-nav right" lay-filter="">
+          <li class="layui-nav-item">
+            <a href="javascript:void(0);" id="user_name"><span>暂未登录</span></a>
+            <dl class="layui-nav-child"> <!-- 二级菜单 -->
+              <!--<dd><a onclick="x_admin_show('个人信息','http://www.baidu.com')">个人信息</a></dd>-->
+              <!--<dd><a onclick="x_admin_show('切换帐号','http://www.baidu.com')">切换帐号</a></dd>-->
+              <dd><a href="javascript:void(0);" id="user_exit">退出</a></dd>
+            </dl>
+          </li>
+          <!--<li class="layui-nav-item to-index"><a href="/">前台首页</a></li>-->
+        </ul>
+        
+    </div>
+    <!-- 顶部结束 -->
+    <!-- 中部开始 -->
+     <!-- 左侧菜单开始 -->
+    <div class="left-nav">
+      <div id="side-nav">
+        <ul id="nav">
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe6b8;</i>
+                    <cite>预约管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="./user-list.html"  onclick="openTab1(this, 'myAppo')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>我的预约</cite>
+                            
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="./all-list.html" onclick="openTab2(this, 'allList')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>系统全部预约</cite>
+                            
+                        </a>
+                    </li>
+                    <li style="display: none">
+                        <a _href="member-del.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>会员删除</cite>
+                            
+                        </a>
+                    </li>
+                    <li  style="display: none">
+                        <a href="javascript:;">
+                            <i class="iconfont">&#xe70b;</i>
+                            <cite>会员管理</cite>
+                            <i class="iconfont nav_right">&#xe697;</i>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a _href="xxx.html">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>会员列表</cite>
+                                    
+                                </a>
+                            </li >
+                            <li>
+                                <a _href="xx.html">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>会员删除</cite>
+                                    
+                                </a>
+                            </li>
+                            <li>
+                                <a _href="xx.html">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>等级管理</cite>
+                                    
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li style="display:none">
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe723;</i>
+                    <cite>订单管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="order-list.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>订单列表</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li style="display:none">
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe723;</i>
+                    <cite>分类管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="cate.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>多级分类</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li style="display:none">
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe723;</i>
+                    <cite>城市联动</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="city.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>三级地区联动</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe726;</i>
+                    <cite>管理员管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="./admin-list.html" onclick="openTab3(this, 'admin')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>管理员列表</cite>
+                        </a>
+                    </li >
+                   
+                </ul>
+            </li>
+         
+        </ul>
+      </div>
+    </div>
+    <!-- <div class="x-slide_left"></div> -->
+    <!-- 左侧菜单结束 -->
+    <!-- 右侧主体开始 -->
+    <div class="page-content">
+        <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+          <ul class="layui-tab-title">
+            <li class="home"><i class="layui-icon">&#xe68e;</i>首页</li>
+          </ul>
+          <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe src='./welcome.html' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="page-content-bg"></div>
+    <!-- 右侧主体结束 -->
+    <!-- 中部结束 -->
+    <!-- 底部开始 -->
+    <div class="footer">
+        <div class="copyright">Copyright ©2017 x-admin v2.3 All Rights Reserved</div>  
+    </div>
+    <!-- 底部结束 -->
+   
+</body>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="./lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="./js/xadmin.js"></script>
+<script src="./js/until.js"></script>
+<script src="./js/xcity.js"></script>
+<script src="https://yunkai-1252438738.cos.ap-shanghai.myqcloud.com/reconnecting-websocket.min.js"></script>
+<script src="https://g-eeboo-1252438738.cos.ap-shanghai.myqcloud.com/js/toastr.min.js"></script>
+ 
+<script>
+    var ws = '';
+    var layer = layui.layer;
+    var res = ajax.send('/admin/adminInfo', 'get');
+    if (res) {
+        $('#user_name').html(res.data.name);
+        localStorage.setItem('name', res.data.name);
+    }
+
+    $('#user_exit').click(function () {
+        var res = ajax.send('/login/logout', 'post');
+        console.log(res);
+        if (res) {
+            localStorage.clear();
+            location.href = './login.html';
+        }
+    });
+
+    // function isV()
+    // {
+    //     var res = ajax.send('/admin', 'get');
+
+    //     if (res) {
+    //         tab.tabAdd('管理员列表', './admin-list.html', 15);
+    //     }
+    // }
+
+    
+</script>
+<script>
+    window.onload = function () {
+        // setInterval(function () {
+        //     console.log(document.getElementById('queryByName'));
+        // },1000);
+        var lay = '';
+        ws = new ReconnectingWebSocket('ws://47.100.3.125:9501', null, { debug: true, reconnectInterval: 3000 });
+        ws.onopen = function (res) {
+            layer.close(lay);
+            layer.msg("连接服务器成功");
+            var msg = JSON.stringify({'action': 'login', 'content': localStorage.getItem('token')});
+            ws.send(msg);
+        }
+        ws.onmessage = function (res) {
+            console.log(res.data);
+            wsInfo(res.data);
+        }
+        ws.onclose = function (e) {
+            WebSocketFlag = false;
+            // lay = layer.msg('正在尝试重新连接服务器...', {
+            //     icon: 16,
+            //     shade: 0.5,
+            //     time: 0,
+            // });
+            // disConnect;
+        }
+    }
+
+    function wsInfo(string)
+    {
+        var data = JSON.parse(string);
+        switch (data.action)
+        {
+            case 'logout':
+                localStorage.clear();
+                location.href = './login.html';
+                break;
+            case 'backvisit_remind':
+                var time = data.data.b_time.split(' ')[1];
+                toastr.info('你在今日 '+ time +' 有一条预约需要回访，预约ID为：'+ data.data.id +'， 姓名为：' + data.data.name)
+                break;
+            case 'transfer_remind':
+                toastr.options = {
+                    "timeOut": "60000",
+                }
+                toastr.success(data.data.admin_name + ' 刚刚向你转让了一条预约记录，预约ID为：'+data.data.customer_id+'， 姓名为：'+data.data.customer_name);
+                break;
+        }
+    }
+
+     function openTab1(that, action) {
+            layui.use(['element'], function () {  //如果只加载一个模块，可以不填数组。如：layui.use('form')
+                element = layui.element//获取form模块
+                
+                var url = $(that).attr('_href')+ '?action=' +action;
+                var index = Math.ceil(Math.random()*50);
+                  //触发事件
+                tab = {
+                        tabAdd: function(title,url,id){
+                            console.log(url);
+                        //新增一个Tab项
+                        parent.element.tabAdd('xbs_tab', {
+                            title: title 
+                            ,content: '<iframe tab-id="'+id+'" frameborder="0" src="'+url+'" scrolling="yes" class="x-iframe diy-page"></iframe>'
+                            ,id: id
+                        })
+                        }
+                        ,tabDelete: function(othis){
+                        //删除指定Tab项
+                        element.tabDelete('xbs_tab', '44'); //删除：“商品管理”
+                        
+                        
+                        othis.addClass('layui-btn-disabled');
+                        }
+                        ,tabChange: function(id){
+                        //切换到指定Tab项
+                        parent.element.tabChange('xbs_tab', id); //切换到：用户管理
+                        }
+                };
+                
+                if ($(window.parent.document).find(".diy-page").length) {
+                    console.log('存在');
+                    tab.tabChange($(window.parent.document).find(".diy-page").attr('tab-id'));
+                } else {
+                    tab.tabAdd('我的预约',url,index+1);
+                    tab.tabChange(index+1);
+                }
+               
+                
+            });
+        }
+        
+        function openTab2(that, action) {
+            layui.use(['element'], function () {  //如果只加载一个模块，可以不填数组。如：layui.use('form')
+                element = layui.element//获取form模块
+                var url = $(that).attr('_href')+ '?action=' +action;
+                var index = Math.ceil(Math.random()*50);
+                  //触发事件
+                tab = {
+                        tabAdd: function(title,url,id){
+                            console.log(url);
+                        //新增一个Tab项
+                        parent.element.tabAdd('xbs_tab', {
+                            title: title 
+                            ,content: '<iframe tab-id="'+id+'" frameborder="0" src="'+url+'" scrolling="yes" class="x-iframe diy-page2"></iframe>'
+                            ,id: id
+                        })
+                        }
+                        ,tabDelete: function(othis){
+                        //删除指定Tab项
+                        element.tabDelete('xbs_tab', '44'); //删除：“商品管理”
+                        
+                        
+                        othis.addClass('layui-btn-disabled');
+                        }
+                        ,tabChange: function(id){
+                        //切换到指定Tab项
+                        parent.element.tabChange('xbs_tab', id); //切换到：用户管理
+                        }
+                };
+                
+                if ($(window.parent.document).find(".diy-page2").length) {
+                    console.log('存在');
+                    tab.tabChange($(window.parent.document).find(".diy-page2").attr('tab-id'));
+                } else {
+                    tab.tabAdd('系统全部预约',url,index+1);
+                    tab.tabChange(index+1);
+                }
+               
+                
+            });
+        }
+        function openTab3(that, action) {
+            layui.use(['element'], function () {  //如果只加载一个模块，可以不填数组。如：layui.use('form')
+                element = layui.element//获取form模块
+                var url = $(that).attr('_href')+ '?action=' +action;
+                var index = Math.ceil(Math.random()*50);
+                  //触发事件
+                tab = {
+                        tabAdd: function(title,url,id){
+                            console.log(url);
+                        //新增一个Tab项
+                        parent.element.tabAdd('xbs_tab', {
+                            title: title 
+                            ,content: '<iframe tab-id="'+id+'" frameborder="0" src="'+url+'" scrolling="yes" class="x-iframe diy-page3"></iframe>'
+                            ,id: id
+                        })
+                        }
+                        ,tabDelete: function(othis){
+                        //删除指定Tab项
+                        element.tabDelete('xbs_tab', '44'); //删除：“商品管理”
+                        
+                        
+                        othis.addClass('layui-btn-disabled');
+                        }
+                        ,tabChange: function(id){
+                        //切换到指定Tab项
+                        parent.element.tabChange('xbs_tab', id); //切换到：用户管理
+                        }
+                };
+                
+                if ($(window.parent.document).find(".diy-page3").length) {
+                    console.log('存在');
+                    tab.tabChange($(window.parent.document).find(".diy-page3").attr('tab-id'));
+                } else {
+                    tab.tabAdd('管理员列表',url,index+1);
+                    tab.tabChange(index+1);
+                }
+               
+                
+            });
+        }
+</script>
+</html>
