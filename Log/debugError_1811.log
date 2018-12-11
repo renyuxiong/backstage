@@ -1,0 +1,150 @@
+18-11-19 17:29:46:Error at file[/data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/ServerManager.php] line[58] message:[Uncaught Swoole\Exception: failed to listen server port[0.0.0.0:80]. Error: Address already in use[98]. in /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/ServerManager.php:58
+Stack trace:
+#0 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/ServerManager.php(58): Swoole\Server->__construct('0.0.0.0', 80, 2, 1)
+#1 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php(83): EasySwoole\EasySwoole\ServerManager->createSwooleServer(80, 'WEB_SERVER', '0.0.0.0', Array, 2, 1)
+#2 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/bin/easyswoole.php(182): EasySwoole\EasySwoole\Core->createServer()
+#3 /data/wwwroot/backstage/easyswoole(1): require('/data/wwwroot/b...')
+#4 {main}
+  thrown]
+18-11-19 17:49:11:Error at file[/data/wwwroot/backstage/App/HttpController/Index.php] line[6] message:[Declaration of App\HttpController\Index::onRequest() must be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-19 18:30:01:Error at file[/data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php] line[186] message:[Uncaught ArgumentCountError: Too few arguments to function EasySwoole\EasySwoole\Core::EasySwoole\EasySwoole\{closure}(), 0 passed and exactly 3 expected in /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php:186
+Stack trace:
+#0 [internal function]: EasySwoole\EasySwoole\Core->EasySwoole\EasySwoole\{closure}()
+#1 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php(203): call_user_func(Object(Closure))
+#2 {main}
+  thrown]
+18-11-20 10:05:44:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/Message/ServerRequest.php] line[112] message:[Illegal offset type in isset or empty]
+18-11-20 10:05:55:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/Message/ServerRequest.php] line[112] message:[Illegal offset type in isset or empty]
+18-11-20 11:35:26:Error at file[/data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php] line[186] message:[Uncaught ArgumentCountError: Too few arguments to function EasySwoole\EasySwoole\Core::EasySwoole\EasySwoole\{closure}(), 0 passed and exactly 3 expected in /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php:186
+Stack trace:
+#0 [internal function]: EasySwoole\EasySwoole\Core->EasySwoole\EasySwoole\{closure}()
+#1 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php(203): call_user_func(Object(Closure))
+#2 {main}
+  thrown]
+18-11-20 12:34:56:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[9] message:[Declaration of App\HttpController\Login::onRequest(App\HttpController\Request $request, App\HttpController\Response $response): ?bool should be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 12:36:34:Error at file[/data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php] line[186] message:[Uncaught ArgumentCountError: Too few arguments to function EasySwoole\EasySwoole\Core::EasySwoole\EasySwoole\{closure}(), 0 passed and exactly 3 expected in /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php:186
+Stack trace:
+#0 [internal function]: EasySwoole\EasySwoole\Core->EasySwoole\EasySwoole\{closure}()
+#1 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php(203): call_user_func(Object(Closure))
+#2 {main}
+  thrown]
+18-11-20 12:37:25:Error at file[/data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php] line[186] message:[Uncaught ArgumentCountError: Too few arguments to function EasySwoole\EasySwoole\Core::EasySwoole\EasySwoole\{closure}(), 0 passed and exactly 3 expected in /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php:186
+Stack trace:
+#0 [internal function]: EasySwoole\EasySwoole\Core->EasySwoole\EasySwoole\{closure}()
+#1 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php(203): call_user_func(Object(Closure))
+#2 {main}
+  thrown]
+18-11-20 12:37:53:Error at file[/data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php] line[186] message:[Uncaught ArgumentCountError: Too few arguments to function EasySwoole\EasySwoole\Core::EasySwoole\EasySwoole\{closure}(), 0 passed and exactly 3 expected in /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php:186
+Stack trace:
+#0 [internal function]: EasySwoole\EasySwoole\Core->EasySwoole\EasySwoole\{closure}()
+#1 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php(203): call_user_func(Object(Closure))
+#2 {main}
+  thrown]
+18-11-20 12:38:42:Error at file[/data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php] line[186] message:[Uncaught ArgumentCountError: Too few arguments to function EasySwoole\EasySwoole\Core::EasySwoole\EasySwoole\{closure}(), 0 passed and exactly 3 expected in /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php:186
+Stack trace:
+#0 [internal function]: EasySwoole\EasySwoole\Core->EasySwoole\EasySwoole\{closure}()
+#1 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php(203): call_user_func(Object(Closure))
+#2 {main}
+  thrown]
+18-11-20 13:02:06:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[11] message:[Declaration of App\HttpController\Login::onRequest(EasySwoole\Http\Request $request, EasySwoole\Http\Response $response) must be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 13:02:36:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[11] message:[Declaration of App\HttpController\Login::onRequest(EasySwoole\Http\Request $request, EasySwoole\Http\Response $response): ?bool should be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 13:03:16:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[11] message:[Cannot make non static method EasySwoole\Http\AbstractInterface\Controller::onRequest() static in class App\HttpController\Login]
+18-11-20 13:03:48:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[11] message:[Declaration of App\HttpController\Login::onRequest(EasySwoole\Http\Request $request, EasySwoole\Http\Response $response): bool should be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 13:05:22:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[11] message:[Declaration of App\HttpController\Login::onRequest(EasySwoole\Http\Request $request, EasySwoole\Http\Response $response): bool should be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 13:06:43:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[11] message:[Declaration of App\HttpController\Login::onRequest(EasySwoole\Http\Request $request, EasySwoole\Http\Response $response): bool should be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 13:07:16:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[11] message:[Declaration of App\HttpController\Login::onRequest(EasySwoole\Http\Request $request, EasySwoole\Http\Response $response): bool should be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 13:10:45:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[11] message:[Declaration of App\HttpController\Login::onRequest(EasySwoole\Http\Request $request, EasySwoole\Http\Response $response): bool should be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 13:19:46:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[9] message:[Access level to App\HttpController\Login::__destruct() must be public (as in class EasySwoole\Http\AbstractInterface\Controller)]
+18-11-20 13:42:59:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[9] message:[Declaration of App\HttpController\Login::onRequest() must be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 13:43:31:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[9] message:[Declaration of App\HttpController\Login::onRequest(): ?bool should be compatible with EasySwoole\Http\AbstractInterface\Controller::onRequest(?string $action): ?bool]
+18-11-20 13:51:11:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/Message/Status.php] line[124] message:[Illegal offset type in isset or empty]
+18-11-20 13:51:11:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/Response.php] line[47] message:[Swoole\Http\Response::status() expects parameter 1 to be integer, array given]
+18-11-20 13:58:10:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[9] message:[Declaration of App\HttpController\Login::afterAction(?string $actionName) must be compatible with EasySwoole\Http\AbstractInterface\Controller::afterAction(?string $actionName): void]
+18-11-20 14:00:16:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[86] message:[Undefined variable: db]
+18-11-20 14:13:08:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[20] message:[Undefined variable: request]
+18-11-20 14:13:08:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[20] message:[Trying to get property 'server' of non-object]
+18-11-20 14:14:30:Error at file[/data/wwwroot/backstage/App/HttpController/Login.php] line[20] message:[Undefined property: EasySwoole\Http\Request::$server]
+18-11-20 14:19:50:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[102] message:[Undefined property: EasySwoole\Http\Request::$server]
+18-11-20 14:56:52:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[10] message:[Class App\HttpController\Login contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
+18-11-20 14:57:26:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[10] message:[Class App\HttpController\Admin contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
+18-11-20 14:59:25:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[10] message:[Class App\HttpController\Admin contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
+18-11-20 15:00:53:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[10] message:[Class App\HttpController\Admin contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
+18-11-20 15:00:55:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[10] message:[Class App\HttpController\Admin contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
+18-11-20 15:01:06:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[10] message:[Class App\HttpController\Admin contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
+18-11-20 15:04:30:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[46] message:[Undefined variable: db]
+18-11-20 16:14:13:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[97] message:[Illegal string offset 'id']
+18-11-20 16:14:37:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[97] message:[Illegal string offset 'id']
+18-11-20 16:22:11:Error at file[/data/wwwroot/backstage/App/HttpController/Admin.php] line[97] message:[Illegal string offset 'id']
+18-11-20 17:28:32:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[214] message:[Undefined variable: actions]
+18-11-20 17:54:18:Error at file[/data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php] line[186] message:[Uncaught ArgumentCountError: Too few arguments to function EasySwoole\EasySwoole\Core::EasySwoole\EasySwoole\{closure}(), 0 passed and exactly 3 expected in /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php:186
+Stack trace:
+#0 [internal function]: EasySwoole\EasySwoole\Core->EasySwoole\EasySwoole\{closure}()
+#1 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php(203): call_user_func(Object(Closure))
+#2 {main}
+  thrown]
+18-11-20 17:54:49:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[223] message:[Undefined variable: route]
+18-11-20 17:54:49:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[223] message:[in_array() expects parameter 2 to be array, null given]
+18-11-20 18:05:09:Error at file[/data/wwwroot/backstage/App/HttpController/Role.php] line[78] message:[Undefined variable: db]
+18-11-21 11:30:21:Error at file[/data/wwwroot/backstage/App/HttpController/Customer.php] line[52] message:[Undefined variable: db]
+18-11-21 11:54:22:Error at file[/data/wwwroot/backstage/App/HttpController/Customer.php] line[74] message:[Undefined variable: data]
+18-11-21 13:06:13:Error at file[/data/wwwroot/backstage/App/HttpController/Customer.php] line[80] message:[Undefined variable: key_word]
+18-11-23 11:31:54:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[200] message:[Undefined index: test]
+18-11-23 11:37:43:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[97] message:[Undefined variable: workId]
+18-11-23 11:37:45:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[97] message:[Undefined variable: workId]
+18-11-23 11:37:47:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[97] message:[Undefined variable: workId]
+18-11-23 11:37:49:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[97] message:[Undefined variable: workId]
+18-11-23 11:37:51:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[97] message:[Undefined variable: workId]
+18-11-23 11:37:53:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[97] message:[Undefined variable: workId]
+18-11-23 16:09:44:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:09:46:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:09:48:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:09:50:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:09:52:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:09:54:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:09:56:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:09:58:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:10:00:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:10:02:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:10:04:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:10:06:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:10:08:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:10:10:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:10:12:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-23 16:10:14:Error at file[/data/wwwroot/backstage/App/HttpController/Action.php] line[98] message:[Undefined variable: name]
+18-11-26 16:08:10:Error at file[/data/wwwroot/backstage/App/HttpController/Backvisit.php] line[125] message:[Undefined variable: result]
+18-11-29 16:51:01:Error at file[/data/wwwroot/backstage/App/Model/TestModel.php] line[18] message:[Non-static method App\Model\BaseModel::getDbConnection() should not be called statically]
+18-11-29 17:52:35:Error at file[/data/wwwroot/backstage/App/Model/TestModel.php] line[12] message:[Undefined property: App\Model\TestModel::$table]
+18-11-30 10:22:59:Error at file[/data/wwwroot/backstage/App/HttpController/Testuser.php] line[21] message:[Undefined variable: db]
+18-11-30 13:53:33:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[4] message:[Class Auth contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
+18-11-30 13:54:39:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[6] message:[Class App\HttpController\Auth contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
+18-11-30 13:55:55:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[5] message:[Class App\HttpController\Auth contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
+18-11-30 13:58:45:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[9] message:[Undefined property: App\HttpController\Testuser::$session]
+18-11-30 14:04:24:Error at file[/data/wwwroot/backstage/App/HttpController/Testuser.php] line[8] message:[Access level to App\HttpController\Testuser::onRequest() must be public (as in class App\HttpController\Auth)]
+18-11-30 14:04:28:Error at file[/data/wwwroot/backstage/App/HttpController/Testuser.php] line[8] message:[Access level to App\HttpController\Testuser::onRequest() must be public (as in class App\HttpController\Auth)]
+18-11-30 14:42:53:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[47] message:[Undefined variable: control]
+18-11-30 14:52:00:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[47] message:[Undefined variable: control]
+18-11-30 14:52:01:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[47] message:[Undefined variable: control]
+18-11-30 14:52:02:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[47] message:[Undefined variable: control]
+18-11-30 14:52:19:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[47] message:[Undefined variable: control]
+18-11-30 14:52:19:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[47] message:[Undefined variable: control]
+18-11-30 14:52:20:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[47] message:[Undefined variable: control]
+18-11-30 14:58:12:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[33] message:[Undefined property: App\HttpController\Testuser::$request]
+18-11-30 15:00:30:Error at file[/data/wwwroot/backstage/App/HttpController/Auth.php] line[14] message:[Undefined property: App\HttpController\Testuser::$actionName]
+18-11-30 15:05:04:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[106] message:[Undefined property: App\HttpController\Testuser::$serverParams]
+18-11-30 15:09:35:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[115] message:[Undefined property: EasySwoole\Http\Request::$pathinfo]
+18-11-30 15:09:35:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[106] message:[Undefined property: App\HttpController\Testuser::$pathinfo]
+18-11-30 15:10:17:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[115] message:[Undefined property: EasySwoole\Http\Request::$pathinfo]
+18-11-30 15:11:25:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[115] message:[Undefined property: EasySwoole\Http\Request::$uri]
+18-11-30 15:16:40:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[106] message:[Undefined property: EasySwoole\Http\Request::$host]
+18-11-30 15:17:25:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[115] message:[Undefined property: EasySwoole\Http\Request::$host]
+18-11-30 15:25:05:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[106] message:[Undefined property: App\HttpController\Testuser::$uri]
+18-11-30 15:25:05:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[107] message:[Trying to get property 'path' of non-object]
+18-11-30 16:10:48:Error at file[/data/wwwroot/backstage/vendor/easyswoole/http/src/AbstractInterface/Controller.php] line[29] message:[Cannot modify header information - headers already sent by (output started at /data/wwwroot/backstage/vendor/easyswoole/easyswoole/bin/easyswoole.php:70)]
+18-11-30 16:17:28:Error at file[/data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php] line[186] message:[Uncaught ArgumentCountError: Too few arguments to function EasySwoole\EasySwoole\Core::EasySwoole\EasySwoole\{closure}(), 0 passed and exactly 3 expected in /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php:186
+Stack trace:
+#0 [internal function]: EasySwoole\EasySwoole\Core->EasySwoole\EasySwoole\{closure}()
+#1 /data/wwwroot/backstage/vendor/easyswoole/easyswoole/src/Core.php(203): call_user_func(Object(Closure))
+#2 {main}
+  thrown]
+18-11-30 16:38:45:Error at file[/data/wwwroot/backstage/App/Model/BaseWithRedis.php] line[17] message:[Class 'App\Model\Base' not found]
+18-11-30 16:42:38:Error at file[/data/wwwroot/backstage/App/Model/BaseWithRedis.php] line[0] message:[Class App\Model\BaseWithRedis contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (EasySwoole\Http\AbstractInterface\Controller::index)]
